@@ -1,0 +1,15 @@
+.objaviOglas {
+  width: 100%;
+}
+.objaviOglasPrvi {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.objaviOglasDrugi {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  justify-content: space-between;
+}

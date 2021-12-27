@@ -29,7 +29,7 @@ import Grid from "@mui/material/Grid";
 
 const drawerWidth = 240;
 
-function ResponsiveDrawer(props) {
+function Lolek(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -172,7 +172,7 @@ function ResponsiveDrawer(props) {
       >
         <Toolbar />
 
-        <Grid
+        {/* <Grid
           container
           spacing={{ xs: 2, md: 3 }}
           columns={{ xs: 4, sm: 8, md: 12 }}
@@ -182,18 +182,10 @@ function ResponsiveDrawer(props) {
               <Oglas />
             </Grid>
           ))}
-        </Grid>
+        </Grid> */}
       </Box>
     </Box>
   );
 }
 
-ResponsiveDrawer.propTypes = {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
-  window: PropTypes.func,
-};
-
-export default ResponsiveDrawer;
+export default Lolek;
