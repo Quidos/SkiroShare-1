@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import MainDrawer from "./components/drawer/MainDrawer";
 import Domov from "./pages/Domov/Domov";
+import MojiOglasi from "./pages/MojiOglasi/MojiOglasi";
 import Nastavitve from "./pages/Nastavitve/Nastavitve";
 import ObjaviOglas from "./pages/ObjaviOglas/ObjaviOglas";
 import Pomoc from "./pages/Pomoc/Pomoc";
@@ -15,6 +16,7 @@ function App() {
         <Route path="/objavi" element={<ObjaviOglas />} />
         <Route path="/pomoc" element={<Pomoc />} />
         <Route path="/nastavitve" element={<Nastavitve />} />
+        <Route path="/mojiOglasi" element={<MojiOglasi />} />
       </Routes>
     </div>
   );

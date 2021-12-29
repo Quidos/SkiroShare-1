@@ -4,6 +4,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
 import ElectricScooterIcon from "@mui/icons-material/ElectricScooter";
 import HelpIcon from "@mui/icons-material/Help";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import {
   AppBar,
   Avatar,
@@ -70,6 +71,11 @@ const MainDrawer = () => {
       text: "Nastavitve",
       icon: <SettingsIcon />,
       onClick: () => navigate("/nastavitve"),
+    },
+    {
+      text: "Moji Oglasi",
+      icon: <LibraryBooksIcon />,
+      onClick: () => navigate("/mojiOglasi"),
     },
   ];
 
