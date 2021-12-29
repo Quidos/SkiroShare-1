@@ -8,15 +8,20 @@ import Typography from "@mui/material/Typography";
 
 import Skiro from "./assets/skiro.png";
 import CustomizedDialogs from "../OglasDialog/OglasDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIzbranOglas, setIzbranOglas } from "../../redux/appSlice";
 
 const Oglas = ({
-  id = 0,
+  id = -1,
   title = "Skiro",
   description = "Elektricno skiro",
-  btnText = "Oglej",
+  btnText = "Najemi",
 }) => {
   const [open, setOpen] = React.useState(false);
+  const izbranOglas = useSelector(selectIzbranOglas);
+  const dispatch = useDispatch();
   const showDetails = () => {
+    dispatch(setIzbranOglas(id));
     setOpen(true);
   };
   return (
@@ -49,9 +54,22 @@ const Oglas = ({
           </Button>
         </CardActions>
       </Card>
-      <CustomizedDialogs open={open} setOpen={setOpen} />
+      <CustomizedDialogs
+        open={open}
+        setOpen={setOpen}
+        postaja={izbranOglas && izbranOglas.id}
+        cena={izbranOglas && izbranOglas.cena}
+        naziv={izbranOglas && izbranOglas.naziv}
+        opis={izbranOglas && izbranOglas.opis}
+      />
     </>
   );
 };
 
 export default Oglas;
+// postaja = "Večna Pot 113",
+// cena = "0.13",
+// najemoDajalec = "Janez Novak",
+// kontakt = "051-245-621",
+// naziv = "Skirca",
+// opis = "Praesent commodo cursus magna, vel scelerisque nisl consectetur etVivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.",

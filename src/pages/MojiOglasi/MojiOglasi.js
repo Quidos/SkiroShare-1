@@ -50,6 +50,13 @@ const MojiOglasi = () => {
       editable: true,
     },
     {
+      field: "objavljeno",
+      headerName: "Datum Objave",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+    },
+    {
       field: "actions",
       type: "actions",
       width: 100,

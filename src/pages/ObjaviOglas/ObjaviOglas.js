@@ -4,7 +4,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { MOJI_OGLASI } from "../MojiOglasi/VsiOglasi";
 import "./ObjaviOglas.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -52,6 +51,7 @@ const ObjaviOglas = () => {
         cena,
         baterija,
         status: "Objavljen",
+        objavljeno: new Date().toLocaleString(),
       })
     );
   };

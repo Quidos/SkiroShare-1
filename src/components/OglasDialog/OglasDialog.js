@@ -9,6 +9,9 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
+import DateTimeInput from "../DateTimeInput/DateTimeInput";
+import { useDispatch } from "react-redux";
+import { setIzbranOglas } from "../../redux/appSlice";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -48,11 +51,22 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function CustomizedDialogs({ open, setOpen }) {
+export default function CustomizedDialogs({
+  open,
+  setOpen,
+  postaja = "Večna Pot 113",
+  cena = "0.13",
+  najemoDajalec = "Janez Novak",
+  kontakt = "051-245-621",
+  naziv = "Skirca",
+  opis = "Praesent commodo cursus magna, vel scelerisque nisl consectetur etVivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.",
+}) {
+  const dispatch = useDispatch();
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
+    dispatch(setIzbranOglas(false));
     setOpen(false);
   };
 
@@ -70,35 +84,29 @@ export default function CustomizedDialogs({ open, setOpen }) {
           Električno Skiro
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <Typography style={{ fontWeight: 600 }}>Lokacija</Typography>
-          <Typography gutterBottom>Večna Pot 113</Typography>
-          <Typography style={{ fontWeight: 600 }}>Cena</Typography>
-          <Typography gutterBottom>200 €</Typography>
+          <div className="OglasDialogDatumi">
+            <DateTimeInput label="Zacetek Najema" disabled={true} />
+            <DateTimeInput label="Konec Najema" />
+          </div>
+          <Typography style={{ fontWeight: 600 }}>Postaja</Typography>
+          <Typography gutterBottom>{postaja}</Typography>
+          <Typography style={{ fontWeight: 600 }}>Cena na minuto</Typography>
+          <Typography gutterBottom>{cena} €</Typography>
           <Typography style={{ fontWeight: 600 }}>Najemodajalec</Typography>
-          <Typography gutterBottom>Janez Novak</Typography>
-
+          <Typography gutterBottom>{najemoDajalec}</Typography>
           <Typography style={{ fontWeight: 600 }}>Kontakt</Typography>
-          <Typography gutterBottom>051-245-621</Typography>
-
+          <Typography gutterBottom>{kontakt}</Typography>
           <Typography style={{ fontWeight: 600 }}>Naziv</Typography>
-          <Typography gutterBottom>Skirca</Typography>
+          <Typography gutterBottom>{naziv}</Typography>
           <Typography style={{ fontWeight: 600 }}>Opis</Typography>
-          <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-            auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-            cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-            dui. Donec ullamcorper nulla non metus auctor fringilla.
-          </Typography>
+          <Typography gutterBottom>{opis}</Typography>
         </DialogContent>
-        {/* <DialogActions>
+
+        <DialogActions>
           <Button autoFocus onClick={handleClose}>
-            Save changes
+            Najemi
           </Button>
-        </DialogActions> */}
+        </DialogActions>
       </BootstrapDialog>
     </div>
   );

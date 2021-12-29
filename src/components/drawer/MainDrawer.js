@@ -24,6 +24,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { deepOrange, deepPurple } from "@mui/material/colors";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const MainDrawer = () => {
   const drawerWidth = 240;
@@ -76,6 +77,11 @@ const MainDrawer = () => {
       text: "Moji Oglasi",
       icon: <LibraryBooksIcon />,
       onClick: () => navigate("/mojiOglasi"),
+    },
+    {
+      text: "Odjava",
+      icon: <LogoutIcon />,
+      onClick: () => navigate("/login"),
     },
   ];
 

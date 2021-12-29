@@ -3,7 +3,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export const appSlice = createSlice({
   name: "app",
   initialState: {
-    oglasiUporabnika: [],
+    oglasiUporabnika: JSON.parse(localStorage.getItem("MojiOglasi")) || [],
+    izbranOglas: null,
   },
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
@@ -21,10 +22,18 @@ export const appSlice = createSlice({
       let novi = oglasi.filter(({ id }) => id !== action.payload);
       localStorage.setItem("MojiOglasi", JSON.stringify(novi));
     },
+
+    setIzbranOglas: (state, action) => {
+      let izbran = state.oglasiUporabnika.filter(
+        ({ id }) => id === action.payload
+      );
+      state.izbranOglas = izbran[0] || {};
+    },
   },
 });
 
-export const { addOglasUporabnika, removeOglasUporabnika } = appSlice.actions;
+export const { addOglasUporabnika, removeOglasUporabnika, setIzbranOglas } =
+  appSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -34,5 +43,7 @@ export const selectOglasiUporabnika = (state) => {
     JSON.parse(localStorage.getItem("MojiOglasi")) || state.app.oglasiUporabnika
   );
 };
+
+export const selectIzbranOglas = (state) => state.app.izbranOglas;
 
 export default appSlice.reducer;
