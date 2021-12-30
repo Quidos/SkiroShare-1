@@ -25,6 +25,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import { deepOrange, deepPurple } from "@mui/material/colors";
 import LogoutIcon from "@mui/icons-material/Logout";
+import SearchBar from "../SearchBar/SearchBar";
 
 const MainDrawer = () => {
   const drawerWidth = 240;
@@ -98,7 +99,7 @@ const MainDrawer = () => {
               justifyContent: "space-between",
             }}
           >
-            <IconButton
+            {/* <IconButton
               color="inherit"
               aria-label="open drawer"
               edge="start"
@@ -106,17 +107,26 @@ const MainDrawer = () => {
               sx={{ mr: 2, display: { sm: "none" } }}
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
             <Typography variant="h6" noWrap component="div">
               Skiro Share
             </Typography>
             <Typography variant="h6" noWrap component="div">
               {pageTitle}
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
-              <Avatar sx={{ bgcolor: deepOrange[500], marginRight: 2 }}>
+
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              {location.pathname === "/" && <SearchBar />}
+              <Avatar sx={{ bgcolor: deepOrange[500], marginLeft: 2 }}>
                 D
               </Avatar>
+
               {/* <Button variant="outlined" style={{ backgroundColor: "white" }}>
                 Prijava
               </Button> */}

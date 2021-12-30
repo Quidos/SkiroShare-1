@@ -57,7 +57,7 @@ const Oglas = ({
       <CustomizedDialogs
         open={open}
         setOpen={setOpen}
-        postaja={izbranOglas && izbranOglas.id}
+        postaja={izbranOglas && izbranOglas.postaja}
         cena={izbranOglas && izbranOglas.cena}
         naziv={izbranOglas && izbranOglas.naziv}
         opis={izbranOglas && izbranOglas.opis}

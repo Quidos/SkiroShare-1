@@ -5,6 +5,7 @@ export const appSlice = createSlice({
   initialState: {
     oglasiUporabnika: JSON.parse(localStorage.getItem("MojiOglasi")) || [],
     izbranOglas: null,
+    searchQuery: "",
   },
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
@@ -29,11 +30,18 @@ export const appSlice = createSlice({
       );
       state.izbranOglas = izbran[0] || {};
     },
+    setSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    },
   },
 });
 
-export const { addOglasUporabnika, removeOglasUporabnika, setIzbranOglas } =
-  appSlice.actions;
+export const {
+  addOglasUporabnika,
+  removeOglasUporabnika,
+  setIzbranOglas,
+  setSearchQuery,
+} = appSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -45,5 +53,6 @@ export const selectOglasiUporabnika = (state) => {
 };
 
 export const selectIzbranOglas = (state) => state.app.izbranOglas;
+export const selectSearchQuery = (state) => state.app.searchQuery;
 
 export default appSlice.reducer;
