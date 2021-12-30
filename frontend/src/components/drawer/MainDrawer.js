@@ -37,6 +37,7 @@ const MainDrawer = () => {
     else if (path === "/objavi") return "Objavi Oglas";
     else if (path === "/pomoc") return "Pomoc";
     else if (path === "/nastavitve") return "Nastavitve";
+    else if (path === "/mojiOglasi") return "Moji Oglasi";
   };
 
   useEffect(() => {
@@ -64,6 +65,11 @@ const MainDrawer = () => {
       onClick: () => navigate("/objavi"),
     },
     {
+      text: "Moji Oglasi",
+      icon: <LibraryBooksIcon />,
+      onClick: () => navigate("/mojiOglasi"),
+    },
+    {
       text: "Pomoc",
       icon: <HelpIcon />,
       onClick: () => navigate("/pomoc"),
@@ -73,11 +79,7 @@ const MainDrawer = () => {
       icon: <SettingsIcon />,
       onClick: () => navigate("/nastavitve"),
     },
-    {
-      text: "Moji Oglasi",
-      icon: <LibraryBooksIcon />,
-      onClick: () => navigate("/mojiOglasi"),
-    },
+
     {
       text: "Odjava",
       icon: <LogoutIcon />,
@@ -115,9 +117,9 @@ const MainDrawer = () => {
               <Avatar sx={{ bgcolor: deepOrange[500], marginRight: 2 }}>
                 D
               </Avatar>
-              <Button variant="outlined" style={{ backgroundColor: "white" }}>
+              {/* <Button variant="outlined" style={{ backgroundColor: "white" }}>
                 Prijava
-              </Button>
+              </Button> */}
             </Box>
           </Toolbar>
         </AppBar>
