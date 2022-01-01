@@ -15,7 +15,7 @@ import Checkbox from "@mui/material/Checkbox";
 const Register = () => {
   const paperStyle = {
     padding: 20,
-    height: "60vh",
+    height: "70vh",
     width: 400,
     margin: "20px auto",
   };
@@ -33,29 +33,29 @@ const Register = () => {
           </Grid>
           <TextField
             label="Email"
-            placeholder="Enter Email"
+            placeholder="Vnesite Email"
             fullWidth
             required
             sx={{ marginTop: 2 }}
           />
           <TextField
-            label="Username"
-            placeholder="Enter username"
+            label="Uporabniško ime"
+            placeholder="Vnesite uporabniško ime"
             fullWidth
             required
             sx={{ marginTop: 2 }}
           />
           <TextField
-            label="Password"
-            placeholder="Enter password"
+            label="Geslo"
+            placeholder="Vnesite geslo"
             type="password"
             fullWidth
             required
             sx={{ marginTop: 2 }}
           />
           <TextField
-            label="Password"
-            placeholder="Re-enter password"
+            label="Ponovno geslo"
+            placeholder="Vnesite geslo ponovno"
             type="password"
             fullWidth
             required
@@ -73,7 +73,7 @@ const Register = () => {
           </Button>
 
           <Typography>
-            Already have an account ? <Link href="/login">Sign In</Link>
+            Že imate račun? <Link href="/login">Prijava</Link>
           </Typography>
         </Paper>
       </Grid>

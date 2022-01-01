@@ -10,6 +10,7 @@ import ObjaviOglas from "./pages/ObjaviOglas/ObjaviOglas";
 import Pomoc from "./pages/Pomoc/Pomoc";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import MojNajem from "./pages/MojNajem/MojNajem";
 
 function App() {
   let location = useLocation();
@@ -32,6 +33,7 @@ function App() {
         <Route path="/pomoc" element={<Pomoc />} />
         <Route path="/nastavitve" element={<Nastavitve />} />
         <Route path="/mojiOglasi" element={<MojiOglasi />} />
+        <Route path="/mojNajem" element={<MojNajem />} />
       </Routes>
     </div>
   );

@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const paperStyle = {
     padding: 20,
-    height: "50vh",
+    height: "70vh",
     width: 400,
     margin: "20px auto",
   };
@@ -45,16 +45,16 @@ const Login = () => {
             <h2>Skiro Share</h2>
           </Grid>
           <TextField
-            label="Username"
-            placeholder="Enter username"
+            label="Uporabniško Ime"
+            placeholder="Vnesite uporabniško ime"
             fullWidth
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
-            label="Password"
-            placeholder="Enter password"
+            label="Geslo"
+            placeholder="Vnesite geslo"
             type="password"
             fullWidth
             required
@@ -64,7 +64,7 @@ const Login = () => {
           />
           <FormControlLabel
             control={<Checkbox name="checkedB" color="primary" />}
-            label="Remember me"
+            label="Zapomni me se"
           />
           <Button
             type="submit"
@@ -74,13 +74,13 @@ const Login = () => {
             fullWidth
             onClick={signIn}
           >
-            Sign in
+            Prijavite se
           </Button>
           <Typography>
-            <Link href="#">Forgot password ?</Link>
+            <Link href="#">Ste pozabili geslo?</Link>
           </Typography>
           <Typography>
-            Do you have an account ? <Link href="/register">Sign Up</Link>
+            Še nimate računa? <Link href="/register">Registrirajte se</Link>
           </Typography>
         </Paper>
       </Grid>

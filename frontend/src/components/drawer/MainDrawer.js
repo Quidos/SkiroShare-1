@@ -26,6 +26,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { deepOrange, deepPurple } from "@mui/material/colors";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchBar from "../SearchBar/SearchBar";
+import InventoryIcon from "@mui/icons-material/Inventory";
 
 const MainDrawer = () => {
   const drawerWidth = 240;
@@ -39,6 +40,7 @@ const MainDrawer = () => {
     else if (path === "/pomoc") return "Pomoc";
     else if (path === "/nastavitve") return "Nastavitve";
     else if (path === "/mojiOglasi") return "Moji Oglasi";
+    else if (path === "/mojNajem") return "Moj Najem";
   };
 
   useEffect(() => {
@@ -69,6 +71,11 @@ const MainDrawer = () => {
       text: "Moji Oglasi",
       icon: <LibraryBooksIcon />,
       onClick: () => navigate("/mojiOglasi"),
+    },
+    {
+      text: "Moj Najem",
+      icon: <InventoryIcon />,
+      onClick: () => navigate("/mojNajem"),
     },
     {
       text: "Pomoc",
@@ -136,7 +143,7 @@ const MainDrawer = () => {
         <Toolbar />
         <List>
           {itemList.map(({ text, icon, onClick }, index) => {
-            if (index < 3) {
+            if (index < 4) {
               return (
                 <ListItem button key={index} onClick={onClick}>
                   <ListItemIcon>{icon}</ListItemIcon>
@@ -149,7 +156,7 @@ const MainDrawer = () => {
         <Divider />
         <List>
           {itemList.map(({ text, icon, onClick }, index) => {
-            if (index >= 3) {
+            if (index >= 4) {
               return (
                 <ListItem button key={index} onClick={onClick}>
                   <ListItemIcon>{icon}</ListItemIcon>

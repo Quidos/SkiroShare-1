@@ -1,4 +1,4 @@
-import { Box, Grid, Toolbar } from "@mui/material";
+import { Box, Grid, Toolbar, Typography } from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -26,7 +26,6 @@ const Domov = () => {
   }, [searchQuery]);
   return (
     <div className="drawerContent">
-      {/* <SearchBar /> */}
       <Grid
         container
         spacing={{ xs: 2, md: 2 }}
@@ -44,6 +43,7 @@ const Domov = () => {
             <Oglas />
           </Grid>
         ))} */}
+        {currentOglasi.length === 0 && <Typography>Ni oglasov</Typography>}
         {currentOglasi.map((data) => (
           <Grid item key={data.id} sm={4} md={4}>
             <Oglas id={data.id} title={data.naziv} description={data.opis} />

@@ -1,4 +1,12 @@
-import { Box, Button, FormHelperText, TextField, Toolbar } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  FormHelperText,
+  Snackbar,
+  TextField,
+  Toolbar,
+} from "@mui/material";
 import React, { useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -10,6 +18,7 @@ import {
   addOglasUporabnika,
   selectOglasiUporabnika,
 } from "../../redux/appSlice";
+import Toast from "../../components/Toast/Toast";
 
 const ObjaviOglas = () => {
   const [naziv, setNaziv] = useState("");
@@ -18,9 +27,14 @@ const ObjaviOglas = () => {
   const [cena, setCena] = useState("");
   const [baterija, setBaterija] = useState("");
   const [praznaPoljaError, setPraznaPoljaError] = useState([]);
+  const [closeToast, setOpenToast] = useState(false);
 
   const dispatch = useDispatch();
   const oglasi = useSelector(selectOglasiUporabnika);
+
+  const closeSnackBar = () => {
+    setOpenToast(false);
+  };
 
   const checkEmptyFields = () => {
     let prazna = [];
@@ -31,7 +45,7 @@ const ObjaviOglas = () => {
     if (baterija.length === 0) prazna.push(4);
 
     setPraznaPoljaError(prazna);
-
+    setOpenToast(true);
     if (prazna.length > 0) return true;
 
     return false;
@@ -176,6 +190,28 @@ const ObjaviOglas = () => {
           </Button>
         </div>
       </div>
+      {/* <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={open}
+        onClose={handleClose}
+        message="I love snacks"
+        key={vertical + horizontal}
+      /> */}
+      {praznaPoljaError.length > 0 ? (
+        <Toast
+          open={closeToast}
+          closeToast={closeSnackBar}
+          severity="error"
+          message="Napaka "
+        />
+      ) : (
+        <Toast
+          open={closeToast}
+          closeToast={closeSnackBar}
+          severity="success"
+          message="Uspešno dodan oglas"
+        />
+      )}
     </div>
   );
 };
