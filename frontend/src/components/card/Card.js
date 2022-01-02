@@ -55,15 +55,7 @@ const Oglas = ({
           </Button>
         </CardActions>
       </Card>
-      <CustomizedDialogs
-        id={id}
-        open={open}
-        setOpen={setOpen}
-        postaja={izbranOglas && izbranOglas.postaja}
-        cena={izbranOglas && izbranOglas.cena}
-        naziv={izbranOglas && izbranOglas.naziv}
-        opis={izbranOglas && izbranOglas.opis}
-      />
+      <CustomizedDialogs id={id} open={open} setOpen={setOpen} />
     </>
   );
 };

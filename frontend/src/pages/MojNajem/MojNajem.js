@@ -3,16 +3,22 @@ import React, { useEffect, useState } from "react";
 
 import { najemiUporabnika, zakljuciNajem } from "../../util/utils";
 import DoneIcon from "@mui/icons-material/Done";
+import Toast from "../../components/Toast/Toast";
 
 const MojNajem = () => {
   const [oglasi, setOglasi] = useState([]);
+  const [openToast, setOpenToast] = useState(false);
 
   useEffect(() => {
     najemiUporabnika().then((data) => setOglasi(data));
-  }, []);
+  }, [openToast]);
+
+  const closeToast = () => {
+    setOpenToast(false);
+  };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id_najem", headerName: "ID", width: 90 },
     {
       field: "naziv_postaja",
       headerName: "Postaja",
@@ -83,11 +89,10 @@ const MojNajem = () => {
           icon={<DoneIcon />}
           label="ZakljuciNajem"
           onClick={async (e) => {
-            console.log(params);
             if (!params.row.konec_najema) {
               await zakljuciNajem(params.row.id_skiro, params.row.id_najem);
+              setOpenToast(true);
             }
-            // await zakljuciNajem(params.id);
           }}
         />,
       ],
@@ -106,6 +111,11 @@ const MojNajem = () => {
           getRowId={(row) => row.id_najem}
         />
       </div>
+      <Toast
+        open={openToast}
+        closeToast={closeToast}
+        message="Uspešen zaključek najema"
+      />
     </div>
   );
 };

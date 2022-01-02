@@ -11,25 +11,25 @@ import {
 } from "../../redux/appSlice";
 
 const Domov = () => {
-  const oglasi = useSelector(selectOglasiUporabnika);
   const searchQuery = useSelector(selectSearchQuery);
-  const [currentOglasi, setCurrentOglasi] = useState(oglasi);
   const [vsiOglasi, setVsiOglasi] = useState([]);
 
-  useEffect(() => {
-    API.getRequest("/skiroji").then((data) => {
-      setVsiOglasi(data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   API.getRequest("/skiroji").then((data) => {
+  //     setVsiOglasi(data);
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (searchQuery.length > 0) {
-      let filteredOglasi = oglasi.filter(({ naziv }) =>
+      let filteredOglasi = vsiOglasi.filter(({ naziv }) =>
         naziv.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setCurrentOglasi(filteredOglasi);
+      setVsiOglasi(filteredOglasi);
     } else {
-      setCurrentOglasi(oglasi);
+      API.getRequest("/skiroji").then((data) => {
+        setVsiOglasi(data);
+      });
     }
   }, [searchQuery]);
   return (
@@ -40,12 +40,7 @@ const Domov = () => {
         sx={{ borderColor: "red", borderWidth: 2, justifyContent: "center" }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
-        {currentOglasi.length === 0 && <Typography>Ni oglasov</Typography>}
-        {/* {currentOglasi.map((data) => (
-          <Grid item key={data.id} sm={4} md={4}>
-            <Oglas id={data.id} title={data.naziv} description={data.opis} />
-          </Grid>
-        ))} */}
+        {vsiOglasi.length === 0 && <Typography>Ni oglasov</Typography>}
 
         {vsiOglasi.map((data) => (
           <Grid item key={data.id_skiro} sm={4} md={4}>

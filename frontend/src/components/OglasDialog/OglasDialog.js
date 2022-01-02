@@ -21,6 +21,7 @@ import {
   getUporabnik,
   najemiSkiro,
 } from "../../util/utils";
+import Toast from "../Toast/Toast";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -60,19 +61,10 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function CustomizedDialogs({
-  id = -1,
-  open,
-  setOpen,
-  postaja = "Večna Pot 113",
-  cena = "0.13",
-  najemoDajalec = "Janez Novak",
-  kontakt = "051-245-621",
-  naziv = "Skirca",
-  opis = "Praesent commodo cursus magna, vel scelerisque nisl consectetur etVivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.",
-}) {
+export default function CustomizedDialogs({ id = -1, open, setOpen }) {
   const dispatch = useDispatch();
   const [dialogData, setDialogData] = React.useState({});
+  const [openToast, setOpenToast] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -81,10 +73,15 @@ export default function CustomizedDialogs({
     setOpen(false);
   };
 
+  const closeToast = () => {
+    setOpenToast(false);
+  };
+
   React.useEffect(() => {
     (async function () {
       try {
         if (open) {
+          setOpenToast(false);
           const skiroData = await getSkiro(id);
           const postajaData = await getPostaja(skiroData.id_postaja);
           const uporabnikData = await getUporabnik(skiroData.id_lastnik);
@@ -108,6 +105,10 @@ export default function CustomizedDialogs({
 
   const najemi = async () => {
     await najemiSkiro(dialogData.id_skiro, dialogData.id_postaja);
+    setOpenToast(true);
+    setTimeout(() => {
+      handleClose();
+    }, 1000);
   };
 
   return (
@@ -116,6 +117,7 @@ export default function CustomizedDialogs({
         onClose={handleClose}
         aria-labelledby="customized-dialog-title"
         open={open}
+        fullWidth
       >
         <BootstrapDialogTitle
           id="customized-dialog-title"
@@ -125,8 +127,8 @@ export default function CustomizedDialogs({
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <div className="OglasDialogDatumi">
-            <DateTimeInput label="Zacetek Najema" disabled={true} />
-            <DateTimeInput label="Konec Najema" />
+            {/* <DateTimeInput label="Zacetek Najema" disabled={true} /> */}
+            {/* <DateTimeInput label="Konec Najema" /> */}
           </div>
           <Typography style={{ fontWeight: 600 }}>Postaja</Typography>
           <Typography gutterBottom>{dialogData.postaja}</Typography>
@@ -148,6 +150,11 @@ export default function CustomizedDialogs({
           </Button>
         </DialogActions>
       </BootstrapDialog>
+      <Toast
+        open={openToast}
+        closeToast={closeToast}
+        message="Uspešen najem skiroja"
+      />
     </div>
   );
 }
