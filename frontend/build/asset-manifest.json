@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.b04e5403.css",
+    "main.js": "/static/js/main.3f357eb5.js",
+    "static/js/787.da3a7c73.chunk.js": "/static/js/787.da3a7c73.chunk.js",
+    "static/media/skiro.png": "/static/media/skiro.bb48f0130a55bb2d92be.png",
+    "index.html": "/index.html",
+    "main.b04e5403.css.map": "/static/css/main.b04e5403.css.map",
+    "main.3f357eb5.js.map": "/static/js/main.3f357eb5.js.map",
+    "787.da3a7c73.chunk.js.map": "/static/js/787.da3a7c73.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b04e5403.css",
+    "static/js/main.3f357eb5.js"
+  ]
+}
