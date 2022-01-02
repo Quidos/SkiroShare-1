@@ -10,8 +10,8 @@ import { oglasiUporabnika } from "../../util/utils";
 
 const MojiOglasi = () => {
   // const oglasi = useSelector(selectOglasiUporabnika);
-  const [oglasi, setOglasi] = useState([]);
   const dispatch = useDispatch();
+  const [oglasi, setOglasi] = useState([]);
 
   useEffect(() => {
     oglasiUporabnika().then((data) => setOglasi(data));

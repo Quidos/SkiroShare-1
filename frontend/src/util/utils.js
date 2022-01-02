@@ -62,3 +62,18 @@ export const logoutUser = () => {
 export const oglasiUporabnika = async () => {
   return await API.getRequest("/skirojiUporabnik");
 };
+
+// NAJEMI OD TRENUTNO PRIJAVLJENEGA UPORABNIKA
+export const najemiUporabnika = async () => {
+  return await API.getRequest("/najemiUporabnik");
+};
+
+// USTVARI NAJEM
+export const najemiSkiro = async (id_skiro, id_postaja) => {
+  return await API.postRequest("/najem", { id_skiro, id_postaja });
+};
+
+// ZAKLUCI NAJEM
+export const zakljuciNajem = async (id_skiro, id_najem) => {
+  return await API.postRequest(`/zakljuciSkiro`, { id_skiro, id_najem });
+};

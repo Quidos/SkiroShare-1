@@ -15,7 +15,12 @@ import DateTimeInput from "../DateTimeInput/DateTimeInput";
 import { useDispatch } from "react-redux";
 import { setIzbranOglas } from "../../redux/appSlice";
 import API from "../../config/config";
-import { getPostaja, getSkiro, getUporabnik } from "../../util/utils";
+import {
+  getPostaja,
+  getSkiro,
+  getUporabnik,
+  najemiSkiro,
+} from "../../util/utils";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -79,27 +84,31 @@ export default function CustomizedDialogs({
   React.useEffect(() => {
     (async function () {
       try {
-        const skiroData = await getSkiro(id);
-        const postajaData = await getPostaja(skiroData.id_postaja);
-        const uporabnikData = await getUporabnik(skiroData.id_lastnik);
+        if (open) {
+          const skiroData = await getSkiro(id);
+          const postajaData = await getPostaja(skiroData.id_postaja);
+          const uporabnikData = await getUporabnik(skiroData.id_lastnik);
 
-        // console.log("SKIRO DATA", skiroData);
-        // console.log("POSTAJA DATA", postajaData);
-        // console.log("UPORABNIK DATA", uporabnikData);
-
-        setDialogData({
-          postaja: postajaData.naziv_postaja,
-          cena: skiroData.cena,
-          najemoDajalec: uporabnikData.uporabnisko_ime,
-          kontakt: uporabnikData.telefonska_stevilka,
-          naziv: skiroData.naziv,
-          opis: skiroData.opis,
-        });
+          setDialogData({
+            id_skiro: skiroData.id_skiro,
+            id_postaja: skiroData.id_postaja,
+            postaja: postajaData.naziv_postaja,
+            cena: skiroData.cena,
+            najemoDajalec: uporabnikData.uporabnisko_ime,
+            kontakt: uporabnikData.telefonska_stevilka,
+            naziv: skiroData.naziv,
+            opis: skiroData.opis,
+          });
+        }
       } catch (err) {
         console.error(err);
       }
     })();
   }, [open]);
+
+  const najemi = async () => {
+    await najemiSkiro(dialogData.id_skiro, dialogData.id_postaja);
+  };
 
   return (
     <div>
@@ -134,7 +143,7 @@ export default function CustomizedDialogs({
         </DialogContent>
 
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+          <Button autoFocus onClick={najemi}>
             Najemi
           </Button>
         </DialogActions>

@@ -114,7 +114,9 @@ app.post("/login", async (req, res) => {
 // DOBI VSE SKIROJE
 app.get("/skiroji", authenticateToken, async (req, res) => {
   try {
-    const { rows } = await pool.query("select * from skiro");
+    const { rows } = await pool.query(
+      "select * from skiro where v_najemu is not true"
+    );
     res.status(200).json(rows);
   } catch (err) {
     console.error(err);
@@ -174,7 +176,20 @@ app.get("/najemi", authenticateToken, async (req, res) => {
     res.sendStatus(500);
   }
 });
-// NAJEM Z ID
+// VSI NAJEMI TRENUTNO PRIJAVLJENEGA UPORABNIKA
+app.get("/najemiUporabnik", authenticateToken, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "select * from skiro inner join najem on skiro.id_skiro = najem.id_skiro inner join postaja on najem.id_postaja = postaja.id_postaja where id_uporabnik = $1 order by konec_najema desc",
+      [req.user.id_uporabnik]
+    );
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+// DOBI NAJEM Z ID
 app.get("/najem/:id", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
@@ -182,6 +197,44 @@ app.get("/najem/:id", authenticateToken, async (req, res) => {
       [req.params.id]
     );
     res.status(200).json(rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+// USTVARI NAJEM
+app.post("/najem", authenticateToken, async (req, res) => {
+  try {
+    const { id_skiro, id_postaja } = req.body;
+    await pool.query(
+      "insert into najem(id_skiro,id_uporabnik,id_postaja) values($1,$2,$3)",
+      [id_skiro, req.user.id_uporabnik, id_postaja]
+    );
+    await pool.query("update skiro set v_najemu = $1 where id_skiro = $2", [
+      true,
+      id_skiro,
+    ]);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+// ZAKLUCI NAJEM PREKO ID
+app.post("/zakljuciSkiro", authenticateToken, async (req, res) => {
+  try {
+    const { id_skiro, id_najem } = req.body;
+    await pool.query(
+      "update najem set konec_najema = NOW() where id_najem = $1",
+      [id_najem]
+    );
+    await pool.query("update skiro set v_najemu = $1 where id_skiro = $2", [
+      false,
+      id_skiro,
+    ]);
+    res.sendStatus(200);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);

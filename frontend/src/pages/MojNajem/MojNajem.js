@@ -1,30 +1,31 @@
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { selectOglasiUporabnika } from "../../redux/appSlice";
-import { useDispatch } from "react-redux";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { removeOglasUporabnika } from "../../redux/appSlice";
+import React, { useEffect, useState } from "react";
+
+import { najemiUporabnika, zakljuciNajem } from "../../util/utils";
+import DoneIcon from "@mui/icons-material/Done";
 
 const MojNajem = () => {
-  const oglasi = useSelector(selectOglasiUporabnika);
-  const dispatch = useDispatch();
+  const [oglasi, setOglasi] = useState([]);
+
+  useEffect(() => {
+    najemiUporabnika().then((data) => setOglasi(data));
+  }, []);
+
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     {
-      field: "naziv",
-      headerName: "Naziv",
+      field: "naziv_postaja",
+      headerName: "Postaja",
       flex: 1,
       minWidth: 150,
       editable: true,
     },
     {
-      field: "postaja",
-      headerName: "Postaja",
+      field: "naziv",
+      headerName: "Naziv",
       flex: 1,
       minWidth: 150,
-      editable: true,
+      editable: false,
     },
     {
       field: "cena",
@@ -43,31 +44,50 @@ const MojNajem = () => {
       editable: true,
     },
     {
-      field: "status",
-      headerName: "Status",
-      flex: 1,
-      minWidth: 150,
-      editable: true,
-    },
-    {
-      field: "objavljeno",
-      headerName: "Datum Objave",
+      field: "zacetek_najema",
+      headerName: "Začetek Najema",
       flex: 1,
       minWidth: 150,
       editable: false,
+      type: "dateTime",
+      valueFormatter: (params) => {
+        return new Date(params.value).toLocaleString();
+      },
+      valueGetter: (params) => {
+        return new Date(params.value).toLocaleString();
+      },
+    },
+    {
+      field: "konec_najema",
+      headerName: "Zaključek Najema",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      type: "dateTime",
+      valueFormatter: (params) => {
+        if (params.value) return new Date(params.value).toLocaleString();
+        return "";
+      },
+      valueGetter: (params) => {
+        if (params.value) return new Date(params.value).toLocaleString();
+        return "";
+      },
     },
     {
       field: "actions",
       type: "actions",
+      headerName: "Zaključi Najem",
       width: 100,
       getActions: (params) => [
-        <GridActionsCellItem icon={<EditIcon />} label="Edit" />,
         <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Delete"
-          onClick={(e) => {
+          icon={<DoneIcon />}
+          label="ZakljuciNajem"
+          onClick={async (e) => {
             console.log(params);
-            dispatch(removeOglasUporabnika(params.id));
+            if (!params.row.konec_najema) {
+              await zakljuciNajem(params.row.id_skiro, params.row.id_najem);
+            }
+            // await zakljuciNajem(params.id);
           }}
         />,
       ],
@@ -83,6 +103,7 @@ const MojNajem = () => {
           disableSelectionOnClick
           hideFooter={true}
           autoHeight={true}
+          getRowId={(row) => row.id_najem}
         />
       </div>
     </div>

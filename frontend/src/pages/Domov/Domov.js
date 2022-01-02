@@ -19,12 +19,10 @@ const Domov = () => {
   useEffect(() => {
     API.getRequest("/skiroji").then((data) => {
       setVsiOglasi(data);
-      console.log(data);
     });
   }, []);
 
   useEffect(() => {
-    // console.log("DATUM", moment.locale());
     if (searchQuery.length > 0) {
       let filteredOglasi = oglasi.filter(({ naziv }) =>
         naziv.toLowerCase().includes(searchQuery.toLowerCase())

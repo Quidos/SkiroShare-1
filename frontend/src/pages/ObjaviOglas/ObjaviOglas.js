@@ -92,7 +92,6 @@ const ObjaviOglas = () => {
 
   useEffect(() => {
     getPostaje().then((data) => {
-      console.log(data);
       setPostaje(data);
     });
   }, []);
