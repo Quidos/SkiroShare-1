@@ -30,12 +30,15 @@ const pool = new pg.Pool({
 //     rejectUnauthorized: false,
 //   },
 // });
+// console.log(path.join(__dirname, "../frontend/build"));
+
+// console.log(path.join(__dirname, "../frontend/build"));
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("../frontend/build"));
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../frontend", "build", "index.html"));
+    res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
   });
 }
 
@@ -90,12 +93,12 @@ const getUser = async (username) => {
   }
 };
 
-app.get("/", async (req, res) => {
+app.get("/api", async (req, res) => {
   res.sendStatus(200);
 });
 
 // REGISTRACIJA
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   try {
     const { email, telefonska_stevilka, uporabnisko_ime, geslo } = req.body;
     const hashedPass = await hashPassword(geslo);
@@ -111,7 +114,7 @@ app.post("/register", async (req, res) => {
 });
 
 // PRIJAVA
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   try {
     const { uporabnisko_ime, geslo } = req.body;
     const currentUser = await getUser(uporabnisko_ime);
@@ -131,7 +134,7 @@ app.post("/login", async (req, res) => {
 });
 
 // DOBI VSE SKIROJE
-app.get("/skiroji", authenticateToken, async (req, res) => {
+app.get("/api/skiroji", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
       "select * from skiro where v_najemu is not true"
@@ -143,7 +146,7 @@ app.get("/skiroji", authenticateToken, async (req, res) => {
   }
 });
 // DOBI SKIRO Z ID
-app.get("/skiro/:id", authenticateToken, async (req, res) => {
+app.get("/api/skiro/:id", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
       "select * from skiro where id_skiro = $1",
@@ -156,7 +159,7 @@ app.get("/skiro/:id", authenticateToken, async (req, res) => {
   }
 });
 // SKIROJI OD TRENUTNO PRIJAVLJENEGA UPORABNIKA
-app.get("/skirojiUporabnik", authenticateToken, async (req, res) => {
+app.get("/api/skirojiUporabnik", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
       "select * from skiro inner join postaja on skiro.id_postaja = postaja.id_postaja where id_lastnik = $1",
@@ -170,7 +173,7 @@ app.get("/skirojiUporabnik", authenticateToken, async (req, res) => {
 });
 
 // DODAJ SKIRO
-app.post("/skiro", authenticateToken, async (req, res) => {
+app.post("/api/skiro", authenticateToken, async (req, res) => {
   try {
     const { id_postaja, slika_url, naziv, opis, cena, baterija } = req.body;
     let uporabnik = req.user.id_uporabnik;
@@ -186,7 +189,7 @@ app.post("/skiro", authenticateToken, async (req, res) => {
 });
 
 // VSI NAJEMI
-app.get("/najemi", authenticateToken, async (req, res) => {
+app.get("/api/najemi", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query("select * from najem");
     res.status(200).json(rows);
@@ -196,7 +199,7 @@ app.get("/najemi", authenticateToken, async (req, res) => {
   }
 });
 // VSI NAJEMI TRENUTNO PRIJAVLJENEGA UPORABNIKA
-app.get("/najemiUporabnik", authenticateToken, async (req, res) => {
+app.get("/api/najemiUporabnik", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
       "select * from skiro inner join najem on skiro.id_skiro = najem.id_skiro inner join postaja on najem.id_postaja = postaja.id_postaja where id_uporabnik = $1 order by konec_najema desc",
@@ -209,7 +212,7 @@ app.get("/najemiUporabnik", authenticateToken, async (req, res) => {
   }
 });
 // DOBI NAJEM Z ID
-app.get("/najem/:id", authenticateToken, async (req, res) => {
+app.get("/api/najem/:id", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
       "select * from najem where id_najem = $1",
@@ -223,7 +226,7 @@ app.get("/najem/:id", authenticateToken, async (req, res) => {
 });
 
 // USTVARI NAJEM
-app.post("/najem", authenticateToken, async (req, res) => {
+app.post("/api/najem", authenticateToken, async (req, res) => {
   try {
     const { id_skiro, id_postaja } = req.body;
     await pool.query(
@@ -242,7 +245,7 @@ app.post("/najem", authenticateToken, async (req, res) => {
 });
 
 // ZAKLUCI NAJEM PREKO ID
-app.post("/zakljuciSkiro", authenticateToken, async (req, res) => {
+app.post("/api/zakljuciSkiro", authenticateToken, async (req, res) => {
   try {
     const { id_skiro, id_najem } = req.body;
     await pool.query(
@@ -261,7 +264,7 @@ app.post("/zakljuciSkiro", authenticateToken, async (req, res) => {
 });
 
 // VSE POSTAJE
-app.get("/postaje", authenticateToken, async (req, res) => {
+app.get("/api/postaje", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query("select * from postaja");
     res.status(200).json(rows);
@@ -272,7 +275,7 @@ app.get("/postaje", authenticateToken, async (req, res) => {
 });
 
 // POSTAJA Z ID
-app.get("/postaja/:id", authenticateToken, async (req, res) => {
+app.get("/api/postaja/:id", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
       "select * from postaja where id_postaja = $1",
@@ -286,7 +289,7 @@ app.get("/postaja/:id", authenticateToken, async (req, res) => {
 });
 
 // VSI UPORABNIKI
-app.get("/uporabniki", authenticateToken, async (req, res) => {
+app.get("/api/uporabniki", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query("select * from uporabnik");
     res.status(200).json(rows);
@@ -297,7 +300,7 @@ app.get("/uporabniki", authenticateToken, async (req, res) => {
 });
 
 // UPORABNIK Z ID
-app.get("/uporabnik/:id", authenticateToken, async (req, res) => {
+app.get("/api/uporabnik/:id", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
       "select * from uporabnik where id_uporabnik = $1",
@@ -311,7 +314,7 @@ app.get("/uporabnik/:id", authenticateToken, async (req, res) => {
 });
 
 // UPORABNIK Z TOKEN
-app.get("/uporabnikToken", authenticateToken, async (req, res) => {
+app.get("/api/uporabnikToken", authenticateToken, async (req, res) => {
   try {
     res.status(200).json({ username: req.user.uporabnisko_ime });
   } catch (err) {

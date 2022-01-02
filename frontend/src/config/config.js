@@ -4,10 +4,10 @@ import { selectUserToken, setUserToken } from "../redux/appSlice";
 import { store } from "../redux/store.js";
 
 export const BACKEND_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:4000/" : "";
+  process.env.NODE_ENV === "development" ? "http://localhost:4000/api/" : "";
 
 const customAxios = axios.create({
-  baseURL: BACKEND_URL,
+  baseURL: "http://localhost:4000/api/",
 });
 
 // Add a response interceptor
