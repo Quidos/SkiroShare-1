@@ -27,12 +27,14 @@ import { deepOrange, deepPurple } from "@mui/material/colors";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchBar from "../SearchBar/SearchBar";
 import InventoryIcon from "@mui/icons-material/Inventory";
+import { getUporabnik, logoutUser, userByToken } from "../../util/utils";
 
 const MainDrawer = () => {
   const drawerWidth = 240;
   let navigate = useNavigate();
   let location = useLocation();
   const [pageTitle, setPageTitle] = useState("");
+  const [username, setUsername] = useState("");
 
   const getPageTitle = (path) => {
     if (path === "/") return "Domov";
@@ -46,6 +48,12 @@ const MainDrawer = () => {
   useEffect(() => {
     setPageTitle(getPageTitle(location.pathname));
   }, [location]);
+
+  useEffect(() => {
+    userByToken().then((data) => {
+      if (data) setUsername(data.charAt(0).toUpperCase());
+    });
+  }, []);
 
   const classes = {
     drawer: {
@@ -91,7 +99,10 @@ const MainDrawer = () => {
     {
       text: "Odjava",
       icon: <LogoutIcon />,
-      onClick: () => navigate("/login"),
+      onClick: () => {
+        logoutUser();
+        // navigate("/login");
+      },
     },
   ];
 
@@ -131,7 +142,7 @@ const MainDrawer = () => {
             >
               {location.pathname === "/" && <SearchBar />}
               <Avatar sx={{ bgcolor: deepOrange[500], marginLeft: 2 }}>
-                D
+                {username}
               </Avatar>
 
               {/* <Button variant="outlined" style={{ backgroundColor: "white" }}>

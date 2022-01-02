@@ -7,7 +7,7 @@ import {
   TextField,
   Toolbar,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -20,9 +20,14 @@ import {
 } from "../../redux/appSlice";
 import Toast from "../../components/Toast/Toast";
 
+import API, { BACKEND_URL } from "../../config/config.js";
+import axios from "axios";
+
 const ObjaviOglas = () => {
+  const [slikaURL, setSlikaUrl] = useState("");
   const [naziv, setNaziv] = useState("");
   const [postaja, setPostaja] = useState("");
+  const [postaje, setPostaje] = useState([]);
   const [opis, setOpis] = useState("");
   const [cena, setCena] = useState("");
   const [baterija, setBaterija] = useState("");
@@ -34,6 +39,10 @@ const ObjaviOglas = () => {
 
   const closeSnackBar = () => {
     setOpenToast(false);
+  };
+
+  const getPostaje = async () => {
+    return await API.getRequest("/postaje");
   };
 
   const checkEmptyFields = () => {
@@ -51,7 +60,7 @@ const ObjaviOglas = () => {
     return false;
   };
 
-  const oddajOglas = () => {
+  const oddajOglas = async () => {
     if (checkEmptyFields()) return;
 
     let id = oglasi.length + 1;
@@ -68,7 +77,25 @@ const ObjaviOglas = () => {
         objavljeno: new Date().toLocaleString(),
       })
     );
+    // { id_postaja, slika_url, naziv, opis, cena, baterija }
+    // [uporabnik, id_postaja, slika_url, naziv, opis, cena, baterija]
+    // await axios.post(BACKEND_URL, {id_postaja:});
+    await API.postRequest("/skiro", {
+      id_postaja: postaja,
+      slika_url: slikaURL,
+      naziv,
+      opis,
+      cena,
+      baterija,
+    });
   };
+
+  useEffect(() => {
+    getPostaje().then((data) => {
+      console.log(data);
+      setPostaje(data);
+    });
+  }, []);
 
   return (
     <div className="drawerContent">
@@ -105,9 +132,11 @@ const ObjaviOglas = () => {
                 setPostaja(e.target.value);
               }}
             >
-              <MenuItem value={"Vecna Pot 113"}>Vecna Pot 113</MenuItem>
-              <MenuItem value={"Prešernov Trg"}>Prešernov Trg</MenuItem>
-              <MenuItem value={"Aleja, Šiška"}>Aleja, Šiška</MenuItem>
+              {postaje.map(({ id_postaja, naziv_postaja }) => (
+                <MenuItem key={id_postaja} value={id_postaja}>
+                  {naziv_postaja}
+                </MenuItem>
+              ))}
             </Select>
             <FormHelperText>
               {praznaPoljaError.includes(1) && "Prosimo vnesite polje"}

@@ -10,6 +10,8 @@ import { removeOglasUporabnika } from "../../redux/appSlice";
 const MojiOglasi = () => {
   const oglasi = useSelector(selectOglasiUporabnika);
   const dispatch = useDispatch();
+
+  useEffect(() => {}, []);
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     {

@@ -12,6 +12,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../util/utils";
 
 const Login = () => {
   const paperStyle = {
@@ -28,9 +29,12 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const signIn = () => {
+  const signIn = async () => {
     if (username.length > 0 && password.length > 0) {
-      navigate("/");
+      const data = await loginUser(username, password);
+      if (data) {
+        navigate("/");
+      }
     }
   };
 

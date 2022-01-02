@@ -1,4 +1,6 @@
-import * as React from "react";
+// import * as React from "react";
+import React from "react";
+
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -12,6 +14,8 @@ import Typography from "@mui/material/Typography";
 import DateTimeInput from "../DateTimeInput/DateTimeInput";
 import { useDispatch } from "react-redux";
 import { setIzbranOglas } from "../../redux/appSlice";
+import API from "../../config/config";
+import { getPostaja, getSkiro, getUporabnik } from "../../util/utils";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -52,6 +56,7 @@ BootstrapDialogTitle.propTypes = {
 };
 
 export default function CustomizedDialogs({
+  id = -1,
   open,
   setOpen,
   postaja = "Večna Pot 113",
@@ -62,6 +67,7 @@ export default function CustomizedDialogs({
   opis = "Praesent commodo cursus magna, vel scelerisque nisl consectetur etVivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.",
 }) {
   const dispatch = useDispatch();
+  const [dialogData, setDialogData] = React.useState({});
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -69,6 +75,31 @@ export default function CustomizedDialogs({
     dispatch(setIzbranOglas(false));
     setOpen(false);
   };
+
+  React.useEffect(() => {
+    (async function () {
+      try {
+        const skiroData = await getSkiro(id);
+        const postajaData = await getPostaja(skiroData.id_postaja);
+        const uporabnikData = await getUporabnik(skiroData.id_lastnik);
+
+        // console.log("SKIRO DATA", skiroData);
+        // console.log("POSTAJA DATA", postajaData);
+        // console.log("UPORABNIK DATA", uporabnikData);
+
+        setDialogData({
+          postaja: postajaData.naziv_postaja,
+          cena: skiroData.cena,
+          najemoDajalec: uporabnikData.uporabnisko_ime,
+          kontakt: uporabnikData.telefonska_stevilka,
+          naziv: skiroData.naziv,
+          opis: skiroData.opis,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+  }, [open]);
 
   return (
     <div>
@@ -89,17 +120,17 @@ export default function CustomizedDialogs({
             <DateTimeInput label="Konec Najema" />
           </div>
           <Typography style={{ fontWeight: 600 }}>Postaja</Typography>
-          <Typography gutterBottom>{postaja}</Typography>
+          <Typography gutterBottom>{dialogData.postaja}</Typography>
           <Typography style={{ fontWeight: 600 }}>Cena na minuto</Typography>
-          <Typography gutterBottom>{cena} €</Typography>
+          <Typography gutterBottom>{dialogData.cena} €</Typography>
           <Typography style={{ fontWeight: 600 }}>Najemodajalec</Typography>
-          <Typography gutterBottom>{najemoDajalec}</Typography>
+          <Typography gutterBottom>{dialogData.najemoDajalec}</Typography>
           <Typography style={{ fontWeight: 600 }}>Kontakt</Typography>
-          <Typography gutterBottom>{kontakt}</Typography>
+          <Typography gutterBottom>{dialogData.kontakt}</Typography>
           <Typography style={{ fontWeight: 600 }}>Naziv</Typography>
-          <Typography gutterBottom>{naziv}</Typography>
+          <Typography gutterBottom>{dialogData.naziv}</Typography>
           <Typography style={{ fontWeight: 600 }}>Opis</Typography>
-          <Typography gutterBottom>{opis}</Typography>
+          <Typography gutterBottom>{dialogData.opis}</Typography>
         </DialogContent>
 
         <DialogActions>

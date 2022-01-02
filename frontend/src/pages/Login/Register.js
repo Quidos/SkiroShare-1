@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Paper,
@@ -11,8 +11,15 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import { registerUser } from "../../util/utils";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  let navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [number, setNumber] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -21,6 +28,12 @@ const Register = () => {
   };
   const avatarStyle = { backgroundColor: "#1bbd7e" };
   const btnstyle = { margin: "8px 0" };
+
+  const register = async () => {
+    // email, telefonska_stevilka, uporabnisko_ime, geslo
+    const data = await registerUser(email, number, username, password);
+    if (data) return navigate("/");
+  };
   return (
     <div className="login-wrapper">
       <Grid>
@@ -37,6 +50,17 @@ const Register = () => {
             fullWidth
             required
             sx={{ marginTop: 2 }}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            label="TelefonskaStevilka"
+            placeholder="Vnesite Telefonsko Številko"
+            fullWidth
+            required
+            sx={{ marginTop: 2 }}
+            value={number}
+            onChange={(e) => setNumber(e.target.value)}
           />
           <TextField
             label="Uporabniško ime"
@@ -44,6 +68,8 @@ const Register = () => {
             fullWidth
             required
             sx={{ marginTop: 2 }}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             label="Geslo"
@@ -52,6 +78,8 @@ const Register = () => {
             fullWidth
             required
             sx={{ marginTop: 2 }}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
             label="Ponovno geslo"
@@ -68,6 +96,7 @@ const Register = () => {
             variant="contained"
             style={btnstyle}
             fullWidth
+            onClick={register}
           >
             Register
           </Button>

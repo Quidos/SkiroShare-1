@@ -24,6 +24,7 @@ const Oglas = ({
     dispatch(setIzbranOglas(id));
     setOpen(true);
   };
+
   return (
     <>
       <Card
@@ -55,6 +56,7 @@ const Oglas = ({
         </CardActions>
       </Card>
       <CustomizedDialogs
+        id={id}
         open={open}
         setOpen={setOpen}
         postaja={izbranOglas && izbranOglas.postaja}
