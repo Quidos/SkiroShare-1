@@ -57,3 +57,8 @@ export const userByToken = async () => {
 export const logoutUser = () => {
   store.dispatch(setUserToken(null));
 };
+
+// SKIROJI OD TRENUTNO PRIJAVLJENEGA UPORABNIKA
+export const oglasiUporabnika = async () => {
+  return await API.getRequest("/skirojiUporabnik");
+};

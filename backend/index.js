@@ -134,6 +134,20 @@ app.get("/skiro/:id", authenticateToken, async (req, res) => {
     res.sendStatus(500);
   }
 });
+// SKIROJI OD TRENUTNO PRIJAVLJENEGA UPORABNIKA
+app.get("/skirojiUporabnik", authenticateToken, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "select * from skiro inner join postaja on skiro.id_postaja = postaja.id_postaja where id_lastnik = $1",
+      [req.user.id_uporabnik]
+    );
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 // DODAJ SKIRO
 app.post("/skiro", authenticateToken, async (req, res) => {
   try {
