@@ -9,6 +9,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const __dirname = path.resolve();
+
 //app.use(express.static(path.join(path.resolve(), "client/build")));
 
 const PORT = process.env.PORT || 4000;
