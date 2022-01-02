@@ -4,6 +4,7 @@ import pg from "pg";
 import bcrypt from "bcrypt";
 import cors from "cors";
 import jwt from "jsonwebtoken";
+import path from "path";
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -19,6 +20,22 @@ const pool = new pg.Pool({
     rejectUnauthorized: false,
   },
 });
+
+// const pool = new pg.Pool({
+//   connectionString:
+//     "postgres://xwswrmmwrnwqdq:a65a366140abf6b1bf6bf2a9c1eace9b331cfaf193c425102d7cdbdce15cfc8c@ec2-54-76-249-45.eu-west-1.compute.amazonaws.com:5432/d1o5ga7nmgsr20",
+//   ssl: {
+//     rejectUnauthorized: false,
+//   },
+// });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+  });
+}
 
 // AVTENTIKACIJA
 const TOKEN_SECRET = "secret";
