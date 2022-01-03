@@ -68,8 +68,7 @@ const MojiOglasi = () => {
       minWidth: 150,
       editable: false,
       valueFormatter: (params) => {
-        if (params.value) return "DA";
-        return "NE";
+        return params.value;
       },
       // valueGetter for filtering
       valueGetter: (params) => {

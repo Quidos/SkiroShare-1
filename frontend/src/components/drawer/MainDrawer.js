@@ -81,7 +81,7 @@ const MainDrawer = () => {
       onClick: () => navigate("/mojiOglasi"),
     },
     {
-      text: "Moj Najem",
+      text: "Moj Najemi",
       icon: <InventoryIcon />,
       onClick: () => navigate("/mojNajem"),
     },
