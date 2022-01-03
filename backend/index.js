@@ -323,6 +323,17 @@ app.get("/api/uporabnikToken", authenticateToken, async (req, res) => {
   }
 });
 
+// DOBI KOORDINATE SKIROJEV
+app.get("/koordinate", async (req, res) => {
+  try {
+    const { rows } = await pool.query(`select * from postaja`);
+    res.status(200).json(rows);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 app.listen(PORT, () =>
   console.log(`Server listening on http://localhost:${PORT}/`)
 );

@@ -5,10 +5,12 @@ import { useSelector } from "react-redux";
 import Oglas from "../../components/card/Card";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import API from "../../config/config";
+
 import {
   selectOglasiUporabnika,
   selectSearchQuery,
 } from "../../redux/appSlice";
+import { coordinatesDistance, getPostaja } from "../../util/utils";
 
 const Domov = () => {
   const searchQuery = useSelector(selectSearchQuery);
@@ -21,21 +23,38 @@ const Domov = () => {
   //   });
   // }, []);
 
+  const addDistances = async (data) => {
+    let newData = [];
+    for (let i = 0; i < data.length; i++) {
+      const element = data[i];
+      const { koordinate } = await getPostaja(element.id_postaja);
+      element.razdalja = await coordinatesDistance(koordinate.x, koordinate.y);
+      newData.push(element);
+    }
+    newData.sort((a, b) => parseFloat(a.razdalja) - parseFloat(b.razdalja));
+    return newData;
+  };
+
   useEffect(() => {
     let run = true;
     if (searchQuery.length > 0) {
       let filteredOglasi = vsiOglasi.filter(({ naziv }) =>
         naziv.toLowerCase().includes(searchQuery.toLowerCase())
       );
+      filteredOglasi.sort(
+        (a, b) => parseFloat(a.razdalja) - parseFloat(b.razdalja)
+      );
       if (run) setVsiOglasi(filteredOglasi);
     } else {
       if (prvotniOglasi.length === 0) {
-        API.getRequest("/skiroji").then((data) => {
+        (async function () {
+          const data = await API.getRequest("/skiroji");
+          const newData = await addDistances(data);
           if (run) {
-            setVsiPrvotniOglasi(data);
-            setVsiOglasi(data);
+            setVsiPrvotniOglasi(newData);
+            setVsiOglasi(newData);
           }
-        });
+        })();
       }
       if (run) setVsiOglasi(prvotniOglasi);
     }
@@ -60,6 +79,7 @@ const Domov = () => {
               id={data.id_skiro}
               title={data.naziv}
               description={data.opis}
+              razdalja={data.razdalja + " km"}
             />
           </Grid>
         ))}

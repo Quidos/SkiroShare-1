@@ -61,7 +61,12 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function CustomizedDialogs({ id = -1, open, setOpen }) {
+export default function CustomizedDialogs({
+  id = -1,
+  open,
+  setOpen,
+  razdalja,
+}) {
   const dispatch = useDispatch();
   const [dialogData, setDialogData] = React.useState({});
   const [openToast, setOpenToast] = React.useState(false);
@@ -142,6 +147,8 @@ export default function CustomizedDialogs({ id = -1, open, setOpen }) {
           <Typography gutterBottom>{dialogData.naziv}</Typography>
           <Typography style={{ fontWeight: 600 }}>Opis</Typography>
           <Typography gutterBottom>{dialogData.opis}</Typography>
+          <Typography style={{ fontWeight: 600 }}>Razdalja</Typography>
+          <Typography gutterBottom>{razdalja}</Typography>
         </DialogContent>
 
         <DialogActions>

@@ -1,5 +1,6 @@
 // FILE FOR MOST COMMON FUNCTIONS
 import API from "../config/config.js";
+import * as geolib from "geolib";
 import { setUserToken } from "../redux/appSlice.js";
 import { store } from "../redux/store.js";
 
@@ -76,4 +77,27 @@ export const najemiSkiro = async (id_skiro, id_postaja) => {
 // ZAKLUCI NAJEM
 export const zakljuciNajem = async (id_skiro, id_najem) => {
   return await API.postRequest(`/zakljuciSkiro`, { id_skiro, id_najem });
+};
+
+// DOBI RAZDALJO OD TRENUTNE LOKACIJE DO DOLOCENIH KOORDINAT V METRIH
+export const coordinatesDistance = (lat, lng) => {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const distanceMeters = geolib.getDistance(
+          { latitude, longitude },
+          {
+            latitude: lat,
+            longitude: lng,
+          }
+        );
+        resolve(parseInt(parseInt(distanceMeters / 1000).toFixed(2)));
+      },
+      () => {
+        // alert("Position could not be determined.");
+        reject(false);
+      }
+    );
+  });
 };
