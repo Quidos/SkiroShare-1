@@ -91,9 +91,13 @@ const ObjaviOglas = () => {
   };
 
   useEffect(() => {
+    let run = true;
     getPostaje().then((data) => {
-      setPostaje(data);
+      if (run) setPostaje(data);
     });
+    return () => {
+      run = false;
+    };
   }, []);
 
   return (

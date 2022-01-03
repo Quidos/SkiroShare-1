@@ -10,7 +10,13 @@ const MojNajem = () => {
   const [openToast, setOpenToast] = useState(false);
 
   useEffect(() => {
-    najemiUporabnika().then((data) => setOglasi(data));
+    let run = true;
+    najemiUporabnika().then((data) => {
+      if (run) setOglasi(data);
+    });
+    return () => {
+      run = false;
+    };
   }, [openToast]);
 
   const closeToast = () => {

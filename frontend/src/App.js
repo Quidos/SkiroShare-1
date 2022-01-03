@@ -31,13 +31,6 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* <Route path="/" element={<Domov />} />
-        <Route path="/objavi" element={<ObjaviOglas />} />
-        <Route path="/pomoc" element={<Pomoc />} />
-        <Route path="/nastavitve" element={<Nastavitve />} />
-        <Route path="/mojiOglasi" element={<MojiOglasi />} />
-        <Route path="/mojNajem" element={<MojNajem />} /> */}
-
         <Route
           path="/"
           element={

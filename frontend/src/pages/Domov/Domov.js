@@ -13,6 +13,7 @@ import {
 const Domov = () => {
   const searchQuery = useSelector(selectSearchQuery);
   const [vsiOglasi, setVsiOglasi] = useState([]);
+  const [prvotniOglasi, setVsiPrvotniOglasi] = useState([]);
 
   // useEffect(() => {
   //   API.getRequest("/skiroji").then((data) => {
@@ -21,16 +22,27 @@ const Domov = () => {
   // }, []);
 
   useEffect(() => {
+    let run = true;
     if (searchQuery.length > 0) {
       let filteredOglasi = vsiOglasi.filter(({ naziv }) =>
         naziv.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setVsiOglasi(filteredOglasi);
+      if (run) setVsiOglasi(filteredOglasi);
     } else {
-      API.getRequest("/skiroji").then((data) => {
-        setVsiOglasi(data);
-      });
+      if (prvotniOglasi.length === 0) {
+        API.getRequest("/skiroji").then((data) => {
+          if (run) {
+            setVsiPrvotniOglasi(data);
+            setVsiOglasi(data);
+          }
+        });
+      }
+      if (run) setVsiOglasi(prvotniOglasi);
     }
+
+    return () => {
+      run = false;
+    };
   }, [searchQuery]);
   return (
     <div className="drawerContent">

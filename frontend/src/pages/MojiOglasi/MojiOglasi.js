@@ -14,7 +14,13 @@ const MojiOglasi = () => {
   const [oglasi, setOglasi] = useState([]);
 
   useEffect(() => {
-    oglasiUporabnika().then((data) => setOglasi(data));
+    let run = true;
+    oglasiUporabnika().then((data) => {
+      if (run) setOglasi(data);
+    });
+    return () => {
+      run = false;
+    };
   }, []);
   const columns = [
     { field: "id_skiro", headerName: "ID", width: 90 },
