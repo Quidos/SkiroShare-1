@@ -329,7 +329,7 @@ app.get("/koordinate", async (req, res) => {
 });
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/build")));
+  app.use(express.static(path.join(__dirname, "./frontend/build")));
 
   // app.get("*", (req, res) => {
   //   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
@@ -337,7 +337,7 @@ if (process.env.NODE_ENV === "production") {
 
   // /api/* Misses
   app.get(/^((?!\/api\/).)*$/, function (req, res, next) {
-    res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+    res.sendFile(path.join(__dirname, "./frontend/build", "index.html"));
   });
 }
 
