@@ -24,6 +24,10 @@ function App() {
       setShowDrawer(true);
     }
   }, [location]);
+
+  useEffect(() => {
+    console.log("ENVIRONMENT", process.env.NODE_ENV);
+  }, []);
   return (
     <div className="App">
       {showDrawer && <MainDrawer />}

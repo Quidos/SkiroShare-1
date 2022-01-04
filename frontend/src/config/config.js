@@ -6,7 +6,7 @@ import { store } from "../redux/store.js";
 export const BACKEND_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:4000/api/"
-    : "/api/";
+    : "https://skiroshare-db.herokuapp.com/api/";
 
 const customAxios = axios.create({
   baseURL: BACKEND_URL,
