@@ -36,14 +36,6 @@ const pool = new pg.Pool({
 
 // console.log(path.join(__dirname, "../frontend/build"));
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/build")));
-
-  app.get("/*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
-  });
-}
-
 // AVTENTIKACIJA
 const TOKEN_SECRET = "secret";
 const generateToken = (user) => {
@@ -335,6 +327,19 @@ app.get("/koordinate", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+  // app.get("*", (req, res) => {
+  //   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+  // });
+
+  // /api/* Misses
+  app.get(/^((?!\/api\/).)*$/, function (req, res, next) {
+    res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
+  });
+}
 
 app.listen(PORT, () =>
   console.log(`Server listening on http://localhost:${PORT}/`)
