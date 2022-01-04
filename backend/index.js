@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 import path from "path";
+import bodyParser from "body-parser";
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
