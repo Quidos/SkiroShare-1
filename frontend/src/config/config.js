@@ -4,7 +4,9 @@ import { selectUserToken, setUserToken } from "../redux/appSlice";
 import { store } from "../redux/store.js";
 
 export const BACKEND_URL =
-  process.env.NODE_ENV === "development" ? "http://localhost:4000/api/" : "";
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:4000/api/"
+    : "/api/";
 
 const customAxios = axios.create({
   baseURL: BACKEND_URL,
