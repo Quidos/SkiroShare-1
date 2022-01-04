@@ -17,7 +17,7 @@ import { loginUser } from "../../util/utils";
 const Login = () => {
   const paperStyle = {
     padding: 20,
-    height: "70vh",
+    height: "60%",
     width: 400,
     margin: "20px auto",
   };
@@ -78,7 +78,7 @@ const Login = () => {
             fullWidth
             onClick={signIn}
           >
-            Prijavite se
+            Prijava
           </Button>
           <Typography>
             <Link href="#">Ste pozabili geslo?</Link>

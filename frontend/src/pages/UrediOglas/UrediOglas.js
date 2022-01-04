@@ -12,17 +12,18 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import "./ObjaviOglas.css";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addOglasUporabnika,
-  selectOglasiUporabnika,
-} from "../../redux/appSlice";
+import "./UrediOglas.css";
 import Toast from "../../components/Toast/Toast";
 
 import API from "../../config/config.js";
+import { getPostaja, getSkiro } from "../../util/utils";
+import { selectIzbranOglas } from "../../redux/appSlice";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
-const ObjaviOglas = () => {
+import DeleteDialog from "../../components/DeleteDialog/DeleteDialog.js";
+
+const UrediOglas = () => {
   const [slikaURL, setSlikaUrl] = useState("");
   const [naziv, setNaziv] = useState("");
   const [postaja, setPostaja] = useState("");
@@ -32,9 +33,11 @@ const ObjaviOglas = () => {
   const [baterija, setBaterija] = useState("");
   const [praznaPoljaError, setPraznaPoljaError] = useState([]);
   const [closeToast, setOpenToast] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
-  const dispatch = useDispatch();
-  const oglasi = useSelector(selectOglasiUporabnika);
+  const izbranOglas = useSelector(selectIzbranOglas);
+
+  const params = useParams();
 
   const closeSnackBar = () => {
     setOpenToast(false);
@@ -59,17 +62,22 @@ const ObjaviOglas = () => {
     return false;
   };
 
-  const oddajOglas = async () => {
+  const posodobiOglas = async () => {
     if (checkEmptyFields()) return;
 
-    await API.postRequest("/skiro", {
+    await API.postRequest("/posodobiSkiro", {
       id_postaja: postaja,
       slika_url: slikaURL,
       naziv,
       opis,
       cena,
       baterija,
+      id_skiro: params.id,
     });
+  };
+
+  const izbrisiOglas = async () => {
+    setOpenDialog(true);
   };
 
   useEffect(() => {
@@ -81,6 +89,24 @@ const ObjaviOglas = () => {
       run = false;
     };
   }, []);
+
+  useEffect(() => {
+    let run = true;
+
+    getSkiro(parseInt(params.id)).then((skiroData) => {
+      if (run) {
+        setSlikaUrl(skiroData.slikaURL);
+        setNaziv(skiroData.naziv);
+        setPostaja(skiroData.id_postaja);
+        setOpis(skiroData.opis);
+        setCena(skiroData.cena);
+        setBaterija(skiroData.baterija);
+      }
+    });
+    return () => {
+      run = false;
+    };
+  }, [params]);
 
   return (
     <div className="drawerContent">
@@ -198,19 +224,27 @@ const ObjaviOglas = () => {
           <Button
             variant="contained"
             sx={{ marginLeft: 10 }}
-            onClick={oddajOglas}
+            color="error"
+            onClick={izbrisiOglas}
           >
-            Oddaj Skiro
+            Zbriši Oglas
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ marginLeft: 10 }}
+            onClick={posodobiOglas}
+          >
+            Posodobi
           </Button>
         </div>
       </div>
       {/* <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={open}
-        onClose={handleClose}
-        message="I love snacks"
-        key={vertical + horizontal}
-      /> */}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={open}
+          onClose={handleClose}
+          message="I love snacks"
+          key={vertical + horizontal}
+        /> */}
       {praznaPoljaError.length > 0 ? (
         <Toast
           open={closeToast}
@@ -223,11 +257,12 @@ const ObjaviOglas = () => {
           open={closeToast}
           closeToast={closeSnackBar}
           severity="success"
-          message="Uspešno dodan oglas"
+          message="Uspešno posodobljeno skiro"
         />
       )}
+      <DeleteDialog id={params.id} open={openDialog} setOpen={setOpenDialog} />
     </div>
   );
 };
 
-export default ObjaviOglas;
+export default UrediOglas;

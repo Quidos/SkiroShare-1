@@ -66,6 +66,7 @@ export default function CustomizedDialogs({
   open,
   setOpen,
   razdalja,
+  oglasUporabnika = false,
 }) {
   const dispatch = useDispatch();
   const [dialogData, setDialogData] = React.useState({});
@@ -131,10 +132,6 @@ export default function CustomizedDialogs({
           Električno Skiro
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <div className="OglasDialogDatumi">
-            {/* <DateTimeInput label="Zacetek Najema" disabled={true} /> */}
-            {/* <DateTimeInput label="Konec Najema" /> */}
-          </div>
           <Typography style={{ fontWeight: 600 }}>Postaja</Typography>
           <Typography gutterBottom>{dialogData.postaja}</Typography>
           <Typography style={{ fontWeight: 600 }}>Cena na minuto</Typography>

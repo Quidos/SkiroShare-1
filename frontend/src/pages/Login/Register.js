@@ -22,7 +22,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const paperStyle = {
     padding: 20,
-    height: "70vh",
+    height: "60%",
     width: 400,
     margin: "20px auto",
   };
@@ -54,7 +54,7 @@ const Register = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
-            label="TelefonskaStevilka"
+            label="Telefonska Stevilka"
             placeholder="Vnesite Telefonsko Številko"
             fullWidth
             required
@@ -98,7 +98,7 @@ const Register = () => {
             fullWidth
             onClick={register}
           >
-            Register
+            Registracija
           </Button>
 
           <Typography>

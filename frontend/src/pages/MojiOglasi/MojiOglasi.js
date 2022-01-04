@@ -1,4 +1,5 @@
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectOglasiUporabnika } from "../../redux/appSlice";
@@ -7,16 +8,19 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { removeOglasUporabnika } from "../../redux/appSlice";
 import { oglasiUporabnika } from "../../util/utils";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
+import Oglas from "../../components/card/Card";
 
 const MojiOglasi = () => {
   // const oglasi = useSelector(selectOglasiUporabnika);
   const dispatch = useDispatch();
   const [oglasi, setOglasi] = useState([]);
+  const [vsiOglasi, setVsiOglasi] = useState([]);
 
   useEffect(() => {
     let run = true;
     oglasiUporabnika().then((data) => {
-      if (run) setOglasi(data);
+      if (run) setVsiOglasi(data);
     });
     return () => {
       run = false;
@@ -108,19 +112,66 @@ const MojiOglasi = () => {
       ],
     },
   ];
+  // return (
+  //   <div className="drawerContent">
+  //     <div style={{ width: "100%" }}>
+  //       <DataGrid
+  //         rows={oglasi}
+  //         columns={columns}
+  //         checkboxSelection
+  //         disableSelectionOnClick
+  //         hideFooter={true}
+  //         autoHeight={true}
+  //         getRowId={(row) => row.id_skiro}
+  //       />
+  //     </div>
+  //   </div>
+  // );
+
+  if (vsiOglasi.length === 0) {
+    return (
+      <div className="drawerContentLoading">
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      </div>
+    );
+  }
+
   return (
     <div className="drawerContent">
-      <div style={{ width: "100%" }}>
-        <DataGrid
-          rows={oglasi}
-          columns={columns}
-          checkboxSelection
-          disableSelectionOnClick
-          hideFooter={true}
-          autoHeight={true}
-          getRowId={(row) => row.id_skiro}
-        />
-      </div>
+      <Grid
+        container
+        spacing={{ xs: 2, md: 3 }}
+        columns={{ xs: 4, sm: 8, md: 12 }}
+        // direction="row"
+        // justifyContent="center"
+        // alignItems="center"
+      >
+        {/* {Array.from(Array(6)).map((_, index) => (
+          <Grid item xs={2} sm={4} md={4} key={index}>
+            <Oglas
+              id={data.id_skiro}
+              title={data.naziv}
+              description={data.opis}
+              razdalja={data.razdalja + " km"}
+            />
+          </Grid>
+        ))} */}
+        {vsiOglasi.length === 0 && <Typography>Ni oglasov</Typography>}
+        {vsiOglasi.map((data) => (
+          <Grid item xs={2} sm={4} md={4} key={data.id_skiro}>
+            <Oglas
+              id={data.id_skiro}
+              title={data.naziv}
+              description={data.opis}
+              razdalja={data.razdalja + " km"}
+              oglasUporabnika={true}
+              btnText="Posodobi"
+            />
+          </Grid>
+        ))}
+      </Grid>
     </div>
   );
 };

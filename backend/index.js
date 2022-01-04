@@ -181,6 +181,34 @@ app.post("/api/skiro", authenticateToken, async (req, res) => {
     res.sendStatus(500);
   }
 });
+// POSODOBI SKIRO
+app.post("/api/posodobiSkiro", authenticateToken, async (req, res) => {
+  try {
+    const { id_postaja, slika_url, naziv, opis, cena, baterija, id_skiro } =
+      req.body;
+
+    await pool.query(
+      "update skiro set id_postaja = $1, slika_url = $2, naziv = $3, opis = $4, cena = $5, baterija = $6 where id_skiro = $7",
+      [id_postaja, slika_url, naziv, opis, cena, baterija, id_skiro]
+    );
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+// ZBRISI SKIRO IN Z NJIM POVEZANE NAJEME
+app.delete("/api/skiro/:id", authenticateToken, async (req, res) => {
+  try {
+    console.log({ lol: req.params.id });
+    await pool.query("delete from skiro where id_skiro = $1", [req.params.id]);
+    await pool.query("delete from najem where id_skiro = $1", [req.params.id]);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
 
 // VSI NAJEMI
 app.get("/api/najemi", authenticateToken, async (req, res) => {

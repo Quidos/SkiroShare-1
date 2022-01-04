@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import MojNajem from "./pages/MojNajem/MojNajem";
 import { selectUserToken } from "./redux/appSlice";
 import { useSelector } from "react-redux";
+import UrediOglas from "./pages/UrediOglas/UrediOglas";
 
 function App() {
   let location = useLocation();
@@ -80,6 +81,14 @@ function App() {
           element={
             <RequireAuth redirectTo="/login">
               <MojNajem />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/posodobiOglas/:id"
+          element={
+            <RequireAuth redirectTo="/login">
+              <UrediOglas />
             </RequireAuth>
           }
         />

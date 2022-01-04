@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import { najemiUporabnika, zakljuciNajem } from "../../util/utils";
 import DoneIcon from "@mui/icons-material/Done";
 import Toast from "../../components/Toast/Toast";
+import moment from "moment";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 
 const MojNajem = () => {
   const [oglasi, setOglasi] = useState([]);
@@ -45,7 +48,7 @@ const MojNajem = () => {
       type: "number",
       flex: 1,
       minWidth: 150,
-      editable: true,
+      editable: false,
     },
     {
       field: "baterija",
@@ -86,22 +89,53 @@ const MojNajem = () => {
       },
     },
     {
+      field: "",
+      headerName: "Skupna cena",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      type: "number",
+
+      valueGetter: (params) => {
+        if (params.row.konec_najema && params.row.zacetek_najema) {
+          const difference = moment.duration(
+            moment(params.row.konec_najema).diff(
+              moment(params.row.zacetek_najema)
+            )
+          );
+          const minutes = difference.asMinutes();
+          const price = +(minutes * parseFloat(params.row.cena)).toFixed(2);
+          return price;
+        }
+      },
+    },
+    {
       field: "actions",
       type: "actions",
       headerName: "Zaključi Najem",
       width: 100,
-      getActions: (params) => [
-        <GridActionsCellItem
-          icon={<DoneIcon />}
-          label="ZakljuciNajem"
-          onClick={async (e) => {
-            if (!params.row.konec_najema) {
-              await zakljuciNajem(params.row.id_skiro, params.row.id_najem);
-              setOpenToast(true);
-            }
-          }}
-        />,
-      ],
+      getActions: (params) => {
+        if (params.row.konec_najema && params.row.zacetek_najema) {
+          return [
+            <GridActionsCellItem
+              icon={<CheckCircleIcon sx={{ color: "green" }} />}
+              label="ZakljuciNajem"
+            />,
+          ];
+        }
+        return [
+          <GridActionsCellItem
+            icon={<PauseCircleFilledIcon sx={{ color: "red" }} />}
+            label="ZakljuciNajem"
+            onClick={async (e) => {
+              if (!params.row.konec_najema) {
+                await zakljuciNajem(params.row.id_skiro, params.row.id_najem);
+                setOpenToast(true);
+              }
+            }}
+          />,
+        ];
+      },
     },
   ];
   return (

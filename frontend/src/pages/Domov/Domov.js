@@ -1,4 +1,10 @@
-import { Box, Grid, Toolbar, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -63,18 +69,28 @@ const Domov = () => {
       run = false;
     };
   }, [searchQuery]);
+
+  if (vsiOglasi.length === 0) {
+    return (
+      <div className="drawerContentLoading">
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      </div>
+    );
+  }
   return (
     <div className="drawerContent">
       <Grid
         container
-        spacing={{ xs: 2, md: 2 }}
-        sx={{ borderColor: "red", borderWidth: 2, justifyContent: "center" }}
+        spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
+        // direction="row"
+        // justifyContent="center"
+        // alignItems="center"
       >
-        {vsiOglasi.length === 0 && <Typography>Ni oglasov</Typography>}
-
         {vsiOglasi.map((data) => (
-          <Grid item key={data.id_skiro} sm={4} md={4}>
+          <Grid item xs={2} sm={4} md={4} key={data.id_skiro}>
             <Oglas
               id={data.id_skiro}
               title={data.naziv}

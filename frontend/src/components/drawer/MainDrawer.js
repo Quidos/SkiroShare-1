@@ -37,12 +37,13 @@ const MainDrawer = () => {
   const [username, setUsername] = useState("");
 
   const getPageTitle = (path) => {
-    if (path === "/") return "Domov";
-    else if (path === "/objavi") return "Objavi Oglas";
+    if (path === "/") return "Vsi Skiroji";
+    else if (path === "/objavi") return "Objavi Skiro";
     else if (path === "/pomoc") return "Pomoc";
     else if (path === "/nastavitve") return "Nastavitve";
-    else if (path === "/mojiOglasi") return "Moji Oglasi";
-    else if (path === "/mojNajem") return "Moj Najem";
+    else if (path === "/mojiOglasi") return "Moji Skiroji";
+    else if (path === "/mojNajem") return "Moji Najemi";
+    else if (path.startsWith("/posodobiOglas")) return "Posodobi Skiro";
   };
 
   useEffect(() => {
@@ -66,22 +67,22 @@ const MainDrawer = () => {
 
   const itemList = [
     {
-      text: "Domov",
+      text: "Vsi Skiroji",
       icon: <HomeIcon />,
       onClick: () => navigate("/"),
     },
     {
-      text: "Objavi",
+      text: "Objavi Skiro",
       icon: <ElectricScooterIcon />,
       onClick: () => navigate("/objavi"),
     },
     {
-      text: "Moji Oglasi",
+      text: "Moji Skiroji",
       icon: <LibraryBooksIcon />,
       onClick: () => navigate("/mojiOglasi"),
     },
     {
-      text: "Moj Najemi",
+      text: "Moji Najemi",
       icon: <InventoryIcon />,
       onClick: () => navigate("/mojNajem"),
     },

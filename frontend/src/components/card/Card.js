@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectIzbranOglas, setIzbranOglas } from "../../redux/appSlice";
 import Badge from "@mui/material/Badge";
 import { getPostaja, coordinatesDistance } from "../../util/utils";
+import { useNavigate } from "react-router-dom";
 
 const Oglas = ({
   id = -1,
@@ -19,13 +20,17 @@ const Oglas = ({
   description = "Elektricno skiro",
   btnText = "Najemi",
   razdalja = 0,
+  oglasUporabnika = false,
 }) => {
   const [open, setOpen] = React.useState(false);
   const [distance, setDistance] = React.useState(0);
   const izbranOglas = useSelector(selectIzbranOglas);
   const dispatch = useDispatch();
+  let navigate = useNavigate();
   const showDetails = () => {
     dispatch(setIzbranOglas(id));
+    if (oglasUporabnika) return navigate(`/posodobiOglas/${id}`);
+
     setOpen(true);
   };
 
@@ -83,6 +88,7 @@ const Oglas = ({
         open={open}
         setOpen={setOpen}
         razdalja={razdalja}
+        oglasUporabnika={oglasUporabnika}
       />
     </>
   );
