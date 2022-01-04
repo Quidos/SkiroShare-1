@@ -6,8 +6,8 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import path from "path";
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 const __dirname = path.resolve();
 
