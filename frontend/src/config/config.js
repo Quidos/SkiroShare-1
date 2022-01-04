@@ -7,7 +7,7 @@ export const BACKEND_URL =
   process.env.NODE_ENV === "development" ? "http://localhost:4000/api/" : "";
 
 const customAxios = axios.create({
-  baseURL: "http://localhost:4000/api/",
+  baseURL: BACKEND_URL,
 });
 
 // Add a response interceptor
