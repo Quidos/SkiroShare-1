@@ -34,16 +34,10 @@ const pool = new pg.Pool({
   },
 });
 
-// const pool = new pg.Pool({
-//   connectionString:
-//     "postgres://xwswrmmwrnwqdq:a65a366140abf6b1bf6bf2a9c1eace9b331cfaf193c425102d7cdbdce15cfc8c@ec2-54-76-249-45.eu-west-1.compute.amazonaws.com:5432/d1o5ga7nmgsr20",
-//   ssl: {
-//     rejectUnauthorized: false,
-//   },
-// });
-// console.log(path.join(__dirname, "../frontend/build"));
-
-// console.log(path.join(__dirname, "../frontend/build"));
+const BASE_ASSETS_PATH = "./assets";
+if (process.env.NODE_ENV === "production") {
+  BASE_ASSETS_PATH = path.join(__dirname, "./backend/assets");
+}
 
 // AVTENTIKACIJA
 const TOKEN_SECRET = "secret";
@@ -101,7 +95,7 @@ const getUser = async (username) => {
 const findFile = async (
   target,
   includeRelativePath = true,
-  startPath = "./assets"
+  startPath = BASE_ASSETS_PATH
 ) => {
   var files = await fs.readdir(startPath);
   for (var i = 0; i < files.length; i++) {
@@ -394,7 +388,7 @@ app.post("/api/upload/:id", authenticateToken, async (req, res) => {
     if (req.files) {
       const file = req.files.File;
       const ext = path.extname(file.name);
-      const pot = path.join("./assets", req.params.id + ext);
+      const pot = path.join(BASE_ASSETS_PATH, req.params.id + ext);
 
       await fs.writeFile(pot, file.data);
       await pool.query("update skiro set slika_url = $1 where id_skiro = $2", [
