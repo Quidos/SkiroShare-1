@@ -144,8 +144,12 @@ export default function CustomizedDialogs({
           <Typography gutterBottom>{dialogData.naziv}</Typography>
           <Typography style={{ fontWeight: 600 }}>Opis</Typography>
           <Typography gutterBottom>{dialogData.opis}</Typography>
-          <Typography style={{ fontWeight: 600 }}>Razdalja</Typography>
-          <Typography gutterBottom>{razdalja}</Typography>
+          {razdalja !== 0 && (
+            <>
+              <Typography style={{ fontWeight: 600 }}>Razdalja</Typography>
+              <Typography gutterBottom>{razdalja}</Typography>
+            </>
+          )}
         </DialogContent>
 
         <DialogActions>

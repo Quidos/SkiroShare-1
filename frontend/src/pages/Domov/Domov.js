@@ -35,6 +35,7 @@ const Domov = () => {
       const element = data[i];
       const { koordinate } = await getPostaja(element.id_postaja);
       element.razdalja = await coordinatesDistance(koordinate.x, koordinate.y);
+      if (!element.razdalja) element.razdalja = 0;
       newData.push(element);
     }
     newData.sort((a, b) => parseFloat(a.razdalja) - parseFloat(b.razdalja));
@@ -95,7 +96,7 @@ const Domov = () => {
               id={data.id_skiro}
               title={data.naziv}
               description={data.opis}
-              razdalja={data.razdalja + " km"}
+              razdalja={data.razdalja === 0 ? 0 : data.razdalja + " km"}
             />
           </Grid>
         ))}

@@ -165,7 +165,7 @@ const MojiOglasi = () => {
               id={data.id_skiro}
               title={data.naziv}
               description={data.opis}
-              razdalja={data.razdalja + " km"}
+              // razdalja={data.razdalja === 0 ? 0 : data.razdalja + " km"}
               oglasUporabnika={true}
               btnText="Posodobi"
             />

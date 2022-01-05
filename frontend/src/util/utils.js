@@ -96,7 +96,7 @@ export const coordinatesDistance = (lat, lng) => {
       },
       () => {
         // alert("Position could not be determined.");
-        reject(false);
+        resolve(false);
       }
     );
   });
