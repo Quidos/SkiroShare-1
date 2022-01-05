@@ -1,8 +1,9 @@
 // FILE FOR MOST COMMON FUNCTIONS
-import API from "../config/config.js";
+import API, { BACKEND_URL } from "../config/config.js";
 import * as geolib from "geolib";
 import { setUserToken } from "../redux/appSlice.js";
 import { store } from "../redux/store.js";
+import axios from "axios";
 
 export const getSkiro = async (id) => {
   return await API.getRequest(`/skiro/${id}`);
@@ -100,4 +101,31 @@ export const coordinatesDistance = (lat, lng) => {
       }
     );
   });
+};
+
+// NALOZI SLIKO SKIROJA
+export const naloziSliko = async (id_skiro, file) => {
+  if (!file) return;
+  const formData = new FormData();
+  formData.append("File", file);
+  await axios.post(`${BACKEND_URL}upload/${id_skiro}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: "Bearer " + localStorage.getItem("token") || "",
+    },
+  });
+};
+
+export const dobiSliko = async (id_skiro) => {
+  try {
+    const res = await axios.get(`${BACKEND_URL}slika/${id_skiro}`, {
+      responseType: "arraybuffer",
+    });
+    if (res.statusText === "without image") return "";
+    const imgFile = new Blob([res.data]);
+    const imgUrl = URL.createObjectURL(imgFile);
+    return imgUrl;
+  } catch (error) {
+    return "";
+  }
 };

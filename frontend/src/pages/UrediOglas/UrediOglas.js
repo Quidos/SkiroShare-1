@@ -16,10 +16,10 @@ import "./UrediOglas.css";
 import Toast from "../../components/Toast/Toast";
 
 import API from "../../config/config.js";
-import { getPostaja, getSkiro } from "../../util/utils";
+import { getPostaja, getSkiro, naloziSliko } from "../../util/utils";
 import { selectIzbranOglas } from "../../redux/appSlice";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import DeleteDialog from "../../components/DeleteDialog/DeleteDialog.js";
 
@@ -35,7 +35,7 @@ const UrediOglas = () => {
   const [closeToast, setOpenToast] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
-  const izbranOglas = useSelector(selectIzbranOglas);
+  let navigate = useNavigate();
 
   const params = useParams();
 
@@ -74,10 +74,20 @@ const UrediOglas = () => {
       baterija,
       id_skiro: params.id,
     });
+
+    await naloziSliko(params.id, selectedFile);
+    navigate("/mojiOglasi");
+  };
+
+  const [selectedFile, setSelectedFile] = useState(false);
+
+  const changeHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
   const izbrisiOglas = async () => {
     setOpenDialog(true);
+    navigate("/mojiOglasi");
   };
 
   useEffect(() => {
@@ -215,6 +225,8 @@ const UrediOglas = () => {
             style={{ display: "none" }}
             id="contained-button-file"
             type="file"
+            name="skiroSlika"
+            onChange={changeHandler}
           />
           <label htmlFor="contained-button-file">
             <Button variant="contained" color="primary" component="span">

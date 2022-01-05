@@ -6,10 +6,19 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import path from "path";
 import bodyParser from "body-parser";
+// import fileUpload from "express-fileupload";
+import { promises as fs } from "fs";
+
+// const fileUpload = require("express-fileupload");
+
+import fileUpload from "express-fileupload";
+
 const app = express();
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(fileUpload());
 
 const __dirname = path.resolve();
 
@@ -85,6 +94,24 @@ const getUser = async (username) => {
     console.error(err);
     return false;
   }
+};
+
+// DOBI DATOTEKO Z IMENOM - DEFAULT V ASSETS MAPI
+
+const findFile = async (
+  target,
+  includeRelativePath = true,
+  startPath = "./assets"
+) => {
+  var files = await fs.readdir(startPath);
+  for (var i = 0; i < files.length; i++) {
+    const onlyName = path.parse(files[i]).name;
+    if (onlyName === target) {
+      if (includeRelativePath) return path.join(__dirname, startPath, files[i]);
+      return files[i];
+    }
+  }
+  return false;
 };
 
 app.get("/api", async (req, res) => {
@@ -172,10 +199,10 @@ app.post("/api/skiro", authenticateToken, async (req, res) => {
     const { id_postaja, slika_url, naziv, opis, cena, baterija } = req.body;
     let uporabnik = req.user.id_uporabnik;
     const { rows } = await pool.query(
-      "insert into skiro(id_lastnik,id_postaja,slika_url,naziv,opis,cena,baterija) values ($1,$2,$3,$4,$5,$6,$7)",
+      "insert into skiro(id_lastnik,id_postaja,slika_url,naziv,opis,cena,baterija) values ($1,$2,$3,$4,$5,$6,$7) RETURNING *",
       [uporabnik, id_postaja, slika_url, naziv, opis, cena, baterija]
     );
-    res.sendStatus(200);
+    res.status(200).json(rows);
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -191,6 +218,7 @@ app.post("/api/posodobiSkiro", authenticateToken, async (req, res) => {
       "update skiro set id_postaja = $1, slika_url = $2, naziv = $3, opis = $4, cena = $5, baterija = $6 where id_skiro = $7",
       [id_postaja, slika_url, naziv, opis, cena, baterija, id_skiro]
     );
+
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
@@ -203,6 +231,10 @@ app.delete("/api/skiro/:id", authenticateToken, async (req, res) => {
     console.log({ lol: req.params.id });
     await pool.query("delete from skiro where id_skiro = $1", [req.params.id]);
     await pool.query("delete from najem where id_skiro = $1", [req.params.id]);
+    const file = await findFile(req.params.id);
+    if (file) {
+      await fs.unlink(file);
+    }
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
@@ -346,7 +378,7 @@ app.get("/api/uporabnikToken", authenticateToken, async (req, res) => {
 });
 
 // DOBI KOORDINATE SKIROJEV
-app.get("/koordinate", async (req, res) => {
+app.get("/api/koordinate", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(`select * from postaja`);
     res.status(200).json(rows);
@@ -356,12 +388,43 @@ app.get("/koordinate", async (req, res) => {
   }
 });
 
+// NALOZI SLIKO
+app.post("/api/upload/:id", authenticateToken, async (req, res) => {
+  try {
+    if (req.files) {
+      const file = req.files.File;
+      const ext = path.extname(file.name);
+      const pot = path.join("./assets", req.params.id + ext);
+
+      await fs.writeFile(pot, file.data);
+      await pool.query("update skiro set slika_url = $1 where id_skiro = $2", [
+        pot,
+        req.params.id,
+      ]);
+      console.log("UPLOADED IMAGE", pot);
+    }
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+// DOBI SLIKO SKIROJA Z ID
+app.get("/api/slika/:id", async (req, res) => {
+  try {
+    const file = await findFile(req.params.id);
+    if (file) return res.status(200).sendFile(file);
+    res.statusMessage = "without image";
+    res.status(200).end();
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "./frontend/build")));
-
-  // app.get("*", (req, res) => {
-  //   res.sendFile(path.join(__dirname, "../frontend/build", "index.html"));
-  // });
 
   // /api/* Misses
   app.get(/^((?!\/api\/).)*$/, function (req, res, next) {

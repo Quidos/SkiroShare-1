@@ -11,7 +11,7 @@ import CustomizedDialogs from "../OglasDialog/OglasDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIzbranOglas, setIzbranOglas } from "../../redux/appSlice";
 import Badge from "@mui/material/Badge";
-import { getPostaja, coordinatesDistance } from "../../util/utils";
+import { getPostaja, coordinatesDistance, dobiSliko } from "../../util/utils";
 import { useNavigate } from "react-router-dom";
 
 const Oglas = ({
@@ -23,7 +23,8 @@ const Oglas = ({
   oglasUporabnika = false,
 }) => {
   const [open, setOpen] = React.useState(false);
-  const [distance, setDistance] = React.useState(0);
+  const [imageURL, setImageURL] = React.useState("");
+  const [hasImage, setHasImage] = React.useState(false);
   const izbranOglas = useSelector(selectIzbranOglas);
   const dispatch = useDispatch();
   let navigate = useNavigate();
@@ -34,13 +35,22 @@ const Oglas = ({
     setOpen(true);
   };
 
-  // React.useEffect(() => {
-  //   (async function () {
-  //     const { koordinate } = await getPostaja(id);
-  //     const dist = await coordinatesDistance(koordinate.x, koordinate.y);
-  //     setDistance(dist + " km");
-  //   })();
-  // }, []);
+  React.useEffect(() => {
+    let run = true;
+    (async function () {
+      const data = await dobiSliko(id);
+      if (run && data.length > 0) {
+        setImageURL(data);
+        setHasImage(true);
+      } else {
+        setImageURL("");
+        setHasImage(false);
+      }
+    })();
+    return () => {
+      run = false;
+    };
+  }, []);
 
   return (
     <>
@@ -55,7 +65,8 @@ const Oglas = ({
       >
         <CardMedia
           component="img"
-          image={Skiro}
+          image={!hasImage ? Skiro : null}
+          src={hasImage ? imageURL : null}
           alt="Skiro"
           style={{ width: "100%", height: "100%" }}
         />

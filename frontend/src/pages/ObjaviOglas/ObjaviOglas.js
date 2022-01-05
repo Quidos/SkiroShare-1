@@ -20,7 +20,10 @@ import {
 } from "../../redux/appSlice";
 import Toast from "../../components/Toast/Toast";
 
-import API from "../../config/config.js";
+import API, { BACKEND_URL } from "../../config/config.js";
+import axios from "axios";
+import { naloziSliko } from "../../util/utils";
+import { useNavigate } from "react-router-dom";
 
 const ObjaviOglas = () => {
   const [slikaURL, setSlikaUrl] = useState("");
@@ -33,8 +36,7 @@ const ObjaviOglas = () => {
   const [praznaPoljaError, setPraznaPoljaError] = useState([]);
   const [closeToast, setOpenToast] = useState(false);
 
-  const dispatch = useDispatch();
-  const oglasi = useSelector(selectOglasiUporabnika);
+  let navigate = useNavigate();
 
   const closeSnackBar = () => {
     setOpenToast(false);
@@ -62,7 +64,7 @@ const ObjaviOglas = () => {
   const oddajOglas = async () => {
     if (checkEmptyFields()) return;
 
-    await API.postRequest("/skiro", {
+    const data = await API.postRequest("/skiro", {
       id_postaja: postaja,
       slika_url: slikaURL,
       naziv,
@@ -70,6 +72,15 @@ const ObjaviOglas = () => {
       cena,
       baterija,
     });
+
+    await naloziSliko(data[0].id_skiro, selectedFile);
+    navigate("/mojiOglasi");
+  };
+
+  const [selectedFile, setSelectedFile] = useState(false);
+
+  const changeHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
   useEffect(() => {
@@ -189,6 +200,8 @@ const ObjaviOglas = () => {
             style={{ display: "none" }}
             id="contained-button-file"
             type="file"
+            name="skiroSlika"
+            onChange={changeHandler}
           />
           <label htmlFor="contained-button-file">
             <Button variant="contained" color="primary" component="span">
