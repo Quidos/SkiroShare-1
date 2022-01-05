@@ -16,14 +16,18 @@ const MojiOglasi = () => {
   const dispatch = useDispatch();
   const [oglasi, setOglasi] = useState([]);
   const [vsiOglasi, setVsiOglasi] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let run = true;
+    setLoading(true);
     oglasiUporabnika().then((data) => {
       if (run) setVsiOglasi(data);
+      setLoading(false);
     });
     return () => {
       run = false;
+      setLoading(false);
     };
   }, []);
   const columns = [
@@ -128,12 +132,20 @@ const MojiOglasi = () => {
   //   </div>
   // );
 
-  if (vsiOglasi.length === 0) {
+  if (loading) {
     return (
       <div className="drawerContentLoading">
         <Box sx={{ display: "flex" }}>
           <CircularProgress />
         </Box>
+      </div>
+    );
+  }
+
+  if (!loading && vsiOglasi.length === 0) {
+    return (
+      <div className="drawerContentLoading">
+        <Typography style={{ fontWeight: 600 }}>Ni Oglasov</Typography>
       </div>
     );
   }

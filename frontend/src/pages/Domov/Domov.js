@@ -22,6 +22,7 @@ const Domov = () => {
   const searchQuery = useSelector(selectSearchQuery);
   const [vsiOglasi, setVsiOglasi] = useState([]);
   const [prvotniOglasi, setVsiPrvotniOglasi] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // useEffect(() => {
   //   API.getRequest("/skiroji").then((data) => {
@@ -44,6 +45,7 @@ const Domov = () => {
 
   useEffect(() => {
     let run = true;
+    setLoading(true);
     if (searchQuery.length > 0) {
       let filteredOglasi = vsiOglasi.filter(({ naziv }) =>
         naziv.toLowerCase().includes(searchQuery.toLowerCase())
@@ -64,6 +66,7 @@ const Domov = () => {
         })();
       }
       if (run) setVsiOglasi(prvotniOglasi);
+      setLoading(false);
     }
 
     return () => {
@@ -71,7 +74,7 @@ const Domov = () => {
     };
   }, [searchQuery]);
 
-  if (vsiOglasi.length === 0) {
+  if (loading) {
     return (
       <div className="drawerContentLoading">
         <Box sx={{ display: "flex" }}>
@@ -80,6 +83,14 @@ const Domov = () => {
       </div>
     );
   }
+  if (!loading && vsiOglasi.length === 0) {
+    return (
+      <div className="drawerContentLoading">
+        <Typography style={{ fontWeight: 600 }}>Ni Oglasov</Typography>
+      </div>
+    );
+  }
+
   return (
     <div className="drawerContent">
       <Grid

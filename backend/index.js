@@ -34,7 +34,7 @@ const pool = new pg.Pool({
   },
 });
 
-const BASE_ASSETS_PATH = "./assets";
+let BASE_ASSETS_PATH = "./assets";
 if (process.env.NODE_ENV === "production") {
   BASE_ASSETS_PATH = path.join(__dirname, "./backend/assets");
 }
@@ -152,7 +152,7 @@ app.post("/api/login", async (req, res) => {
 app.get("/api/skiroji", authenticateToken, async (req, res) => {
   try {
     const { rows } = await pool.query(
-      "select * from skiro where v_najemu is not true"
+      "select * from skiro where v_najemu is not true "
     );
     res.status(200).json(rows);
   } catch (err) {
