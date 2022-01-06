@@ -36,7 +36,7 @@ const pool = new pg.Pool({
 
 let BASE_ASSETS_PATH = "./assets";
 if (process.env.NODE_ENV === "production") {
-  BASE_ASSETS_PATH = path.join(__dirname, "./backend/assets");
+  BASE_ASSETS_PATH = "./backend/assets";
 }
 
 (async function () {
