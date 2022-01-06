@@ -380,6 +380,53 @@ app.get("/api/uporabnikToken", authenticateToken, async (req, res) => {
   }
 });
 
+app.get("/api/uporabnikPodatki", authenticateToken, async (req, res) => {
+  try {
+    res.status(200).json({
+      email: req.user.email,
+      telefonska_stevilka: req.user.telefonska_stevilka,
+      uporabnisko_ime: req.user.uporabnisko_ime,
+    });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+// POSODOBI UPORABNIKA
+app.post("/api/uporabnikUpdate", authenticateToken, async (req, res) => {
+  try {
+    const { email, telefonska_stevilka, uporabnisko_ime, geslo } = req.body;
+    if (email)
+      await pool.query(
+        "update uporabnik set email = $1 where id_uporabnik = $2",
+        [email, req.user.id_uporabnik]
+      );
+    if (telefonska_stevilka)
+      await pool.query(
+        "update uporabnik set telefonska_stevilka = $1 where id_uporabnik = $2",
+        [telefonska_stevilka, req.user.id_uporabnik]
+      );
+    if (uporabnisko_ime)
+      await pool.query(
+        "update uporabnik set uporabnisko_ime = $1 where id_uporabnik = $2",
+        [uporabnisko_ime, req.user.id_uporabnik]
+      );
+    if (geslo) {
+      const hashed = await hashPassword(geslo);
+      await pool.query(
+        "update uporabnik set geslo = $1 where id_uporabnik = $2",
+        [hashed, req.user.id_uporabnik]
+      );
+    }
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 // DOBI KOORDINATE SKIROJEV
 app.get("/api/koordinate", authenticateToken, async (req, res) => {
   try {

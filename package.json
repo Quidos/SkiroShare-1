@@ -20,7 +20,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "heroku-postbuild": "cd backend && npm install && cd .. && cd frontend && npm install && npm run build",
-    "deploy": "git add . && git commit -m 'fixes' && git push origin master && git push heroku master",
+    "deploy": "git add . && git commit -m 'added nastavitve and login && registration validation' && git push origin master && git push heroku master",
     "start": "node ./backend/index.js"
   },
   "repository": {

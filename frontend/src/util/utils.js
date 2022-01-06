@@ -5,6 +5,14 @@ import { setUserToken } from "../redux/appSlice.js";
 import { store } from "../redux/store.js";
 import axios from "axios";
 
+export const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
 export const getSkiro = async (id) => {
   return await API.getRequest(`/skiro/${id}`);
 };
@@ -128,4 +136,14 @@ export const dobiSliko = async (id_skiro) => {
   } catch (error) {
     return "";
   }
+};
+
+// DOBI PODATKE UPORABNIKA
+export const getUser = async () => {
+  return await API.getRequest(`/uporabnikPodatki`);
+};
+
+// POSODOBI PODATKE UPORABNIKA
+export const updateUser = async (data) => {
+  return await API.postRequest(`/uporabnikUpdate`, data);
 };

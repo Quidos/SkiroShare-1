@@ -28,14 +28,46 @@ const Login = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorRaised, setErrorRaised] = useState("");
+  const [praznaPoljaError, setPraznaPoljaError] = useState([]);
 
   const signIn = async () => {
-    if (username.length > 0 && password.length > 0) {
-      const data = await loginUser(username, password);
-      if (data) {
-        navigate("/");
+    try {
+      setPraznaPoljaError([]);
+      setErrorRaised("");
+      let prazna = [];
+      if (username.length === 0) prazna.push(0);
+      if (password.length === 0) prazna.push(1);
+      if (prazna.length > 0) return setPraznaPoljaError(prazna);
+
+      if (username.length > 0 && password.length > 0) {
+        const data = await loginUser(username, password);
+        if (data) {
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      if (error.response.status === 403) {
+        setErrorRaised("Napačno uporabniško ime ali geslo.");
+      } else {
+        setErrorRaised("Napaka serverja.");
       }
     }
+  };
+
+  const onKeyDown = async (e) => {
+    if (e.key === "Enter") await signIn();
+  };
+
+  const onChangeUsername = async (e) => {
+    setErrorRaised("");
+    setPraznaPoljaError(praznaPoljaError.filter((prazno) => prazno !== 0));
+    setUsername(e.target.value);
+  };
+  const onChangePassword = async (e) => {
+    setErrorRaised("");
+    setPraznaPoljaError(praznaPoljaError.filter((prazno) => prazno !== 1));
+    setPassword(e.target.value);
   };
 
   return (
@@ -48,13 +80,24 @@ const Login = () => {
             </Avatar>
             <h2>Skiro Share</h2>
           </Grid>
+          {errorRaised.length > 0 && (
+            <>
+              <Typography color={"error"} sx={{ marginTop: 2 }}>
+                {errorRaised}
+              </Typography>
+            </>
+          )}
+
           <TextField
             label="Uporabniško Ime"
             placeholder="Vnesite uporabniško ime"
             fullWidth
             required
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            sx={{ marginTop: 2 }}
+            onChange={onChangeUsername}
+            error={praznaPoljaError.includes(0)}
+            helperText={praznaPoljaError.includes(0) && "Prosimo vnesite polje"}
           />
           <TextField
             label="Geslo"
@@ -64,7 +107,10 @@ const Login = () => {
             required
             sx={{ marginTop: 2 }}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={onChangePassword}
+            onKeyDown={onKeyDown}
+            error={praznaPoljaError.includes(1)}
+            helperText={praznaPoljaError.includes(1) && "Prosimo vnesite polje"}
           />
           <FormControlLabel
             control={<Checkbox name="checkedB" color="primary" />}
@@ -80,9 +126,9 @@ const Login = () => {
           >
             Prijava
           </Button>
-          <Typography>
+          {/* <Typography>
             <Link href="#">Ste pozabili geslo?</Link>
-          </Typography>
+          </Typography> */}
           <Typography>
             Še nimate računa? <Link href="/register">Registrirajte se</Link>
           </Typography>
