@@ -37,10 +37,16 @@ const pool = new pg.Pool({
 let BASE_ASSETS_PATH = "./assets";
 if (process.env.NODE_ENV === "production") {
   BASE_ASSETS_PATH = path.join(__dirname, "./backend/assets");
-  if (!fs.existsSync(BASE_ASSETS_PATH)) {
-    fs.mkdirSync(BASE_ASSETS_PATH);
-  }
 }
+
+(async function () {
+  try {
+    await fs.stat(BASE_ASSETS_PATH);
+  } catch (error) {
+    console.error(error);
+    await fs.mkdir(BASE_ASSETS_PATH);
+  }
+})();
 
 // AVTENTIKACIJA
 const TOKEN_SECRET = "secret";
