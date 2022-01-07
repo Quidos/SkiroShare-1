@@ -84,8 +84,18 @@ export const najemiSkiro = async (id_skiro, id_postaja) => {
 };
 
 // ZAKLUCI NAJEM
-export const zakljuciNajem = async (id_skiro, id_najem) => {
-  return await API.postRequest(`/zakljuciSkiro`, { id_skiro, id_najem });
+export const zakljuciNajem = async (
+  id_skiro,
+  id_najem,
+  id_postaja,
+  baterija
+) => {
+  return await API.postRequest(`/zakljuciSkiro`, {
+    id_skiro,
+    id_najem,
+    id_postaja,
+    baterija,
+  });
 };
 
 // DOBI RAZDALJO OD TRENUTNE LOKACIJE DO DOLOCENIH KOORDINAT V METRIH

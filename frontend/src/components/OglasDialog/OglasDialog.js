@@ -101,6 +101,7 @@ export default function CustomizedDialogs({
             kontakt: uporabnikData.telefonska_stevilka,
             naziv: skiroData.naziv,
             opis: skiroData.opis,
+            baterija: skiroData.baterija,
           });
         }
       } catch (err) {
@@ -144,6 +145,8 @@ export default function CustomizedDialogs({
           <Typography gutterBottom>{dialogData.naziv}</Typography>
           <Typography style={{ fontWeight: 600 }}>Opis</Typography>
           <Typography gutterBottom>{dialogData.opis}</Typography>
+          <Typography style={{ fontWeight: 600 }}>Baterija</Typography>
+          <Typography gutterBottom>{dialogData.baterija} %</Typography>
           {razdalja !== 0 && (
             <>
               <Typography style={{ fontWeight: 600 }}>Razdalja</Typography>

@@ -228,6 +228,7 @@ app.post("/api/posodobiSkiro", authenticateToken, async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 // ZBRISI SKIRO IN Z NJIM POVEZANE NAJEME
 app.delete("/api/skiro/:id", authenticateToken, async (req, res) => {
   try {
@@ -304,15 +305,16 @@ app.post("/api/najem", authenticateToken, async (req, res) => {
 // ZAKLUCI NAJEM PREKO ID
 app.post("/api/zakljuciSkiro", authenticateToken, async (req, res) => {
   try {
-    const { id_skiro, id_najem } = req.body;
+    const { id_skiro, id_najem, id_postaja, baterija } = req.body;
+    console.log({ id_skiro, id_najem, id_postaja, baterija });
     await pool.query(
-      "update najem set konec_najema = NOW() where id_najem = $1",
-      [id_najem]
+      "update najem set id_postaja = $1, konec_najema = NOW() where id_najem = $2",
+      [id_postaja, id_najem]
     );
-    await pool.query("update skiro set v_najemu = $1 where id_skiro = $2", [
-      false,
-      id_skiro,
-    ]);
+    await pool.query(
+      "update skiro set v_najemu = $1, id_postaja = $2, baterija = $3 where id_skiro = $4",
+      [false, id_postaja, baterija, id_skiro]
+    );
     res.sendStatus(200);
   } catch (err) {
     console.error(err);

@@ -2,20 +2,54 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 
 import { najemiUporabnika, zakljuciNajem } from "../../util/utils";
-import DoneIcon from "@mui/icons-material/Done";
 import Toast from "../../components/Toast/Toast";
 import moment from "moment";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import API from "../../config/config";
 
 const MojNajem = () => {
   const [oglasi, setOglasi] = useState([]);
   const [openToast, setOpenToast] = useState(false);
+  const [baterija, setBaterija] = useState("");
+  const [postaja, setPostaja] = useState("");
+  const [postaje, setPostaje] = useState([]);
+  const [praznaPoljaError, setPraznaPoljaError] = useState([]);
+  const [izbranoSkiro, setIzbranoSkiro] = useState(false);
+
+  const zakljuciSkiro = async () => {
+    if (!izbranoSkiro) return;
+    setPraznaPoljaError([]);
+    let prazna = [];
+    if (baterija.length === 0) prazna.push(0);
+    if (postaja.length === 0) prazna.push(1);
+    if (prazna.length > 0) return setPraznaPoljaError(prazna);
+    await zakljuciNajem(
+      izbranoSkiro.id_skiro,
+      izbranoSkiro.id_najem,
+      izbranoSkiro.id_postaja,
+      baterija
+    );
+    setOpenToast(true);
+  };
 
   useEffect(() => {
     let run = true;
     najemiUporabnika().then((data) => {
       if (run) setOglasi(data);
+    });
+    API.getRequest("/postaje").then((data) => {
+      if (run) setPostaje(data);
     });
     return () => {
       run = false;
@@ -129,8 +163,8 @@ const MojNajem = () => {
             label="ZakljuciNajem"
             onClick={async (e) => {
               if (!params.row.konec_najema) {
-                await zakljuciNajem(params.row.id_skiro, params.row.id_najem);
-                setOpenToast(true);
+                // await zakljuciNajem(params.row.id_skiro, params.row.id_najem);
+                // setOpenToast(true);
               }
             }}
           />,
@@ -140,17 +174,94 @@ const MojNajem = () => {
   ];
   return (
     <div className="drawerContent">
-      <div style={{ width: "100%" }}>
-        <DataGrid
-          rows={oglasi}
-          columns={columns}
-          checkboxSelection
-          disableSelectionOnClick
-          hideFooter={true}
-          autoHeight={true}
-          getRowId={(row) => row.id_najem}
-          sx={{ backgroundColor: "white" }}
-        />
+      <div className="mojiNajemiWrapper">
+        <div style={{ width: "100%" }}>
+          <DataGrid
+            rows={oglasi}
+            columns={columns}
+            checkboxSelection
+            disableSelectionOnClick
+            hideFooter={true}
+            autoHeight={true}
+            getRowId={(row) => row.id_najem}
+            sx={{ backgroundColor: "white" }}
+            onSelectionModelChange={(ids) => {
+              const selectedRowData = oglasi.filter((row) => {
+                return ids[0] === row.id_najem;
+              });
+              setIzbranoSkiro(selectedRowData[0]);
+              // console.log(selectedIDs);
+            }}
+          />
+        </div>
+        {izbranoSkiro && !izbranoSkiro.konec_najema && (
+          <div className="mojiNajemiEdit">
+            <Typography style={{ fontWeight: 600, marginBottom: 4 }}>
+              {"Zaključi najem: " + izbranoSkiro.naziv}
+            </Typography>
+            <TextField
+              required
+              id="filled-basic"
+              label="Baterija %"
+              type="number"
+              inputProps={{
+                inputMode: "numeric",
+                pattern: "[0-9]*",
+                min: 0,
+                max: 100,
+              }}
+              sx={{ marginTop: 1, backgroundColor: "white" }}
+              error={praznaPoljaError.includes(0)}
+              helperText={
+                praznaPoljaError.includes(0) && "Prosimo vnesite polje"
+              }
+              value={baterija}
+              onChange={(e) => {
+                try {
+                  var value = parseInt(e.target.value, 10);
+
+                  if (value > 100) value = 100;
+                  if (value < 0) value = 0;
+
+                  setBaterija(value);
+                } catch (error) {}
+              }}
+            />
+            <FormControl
+              fullWidth
+              required
+              sx={{ marginTop: 1, backgroundColor: "white" }}
+              error={praznaPoljaError.includes(1)}
+            >
+              <InputLabel id="postaja-label">Postaja</InputLabel>
+              <Select
+                labelId="postaja-label"
+                id="postaja-id"
+                value={postaja}
+                label="Postaja"
+                onChange={(e) => {
+                  setPostaja(e.target.value);
+                }}
+              >
+                {postaje.map(({ id_postaja, naziv_postaja }) => (
+                  <MenuItem key={id_postaja} value={id_postaja}>
+                    {naziv_postaja}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>
+                {praznaPoljaError.includes(1) && "Prosimo vnesite polje"}
+              </FormHelperText>
+            </FormControl>
+            <Button
+              variant="contained"
+              sx={{ marginTop: 2 }}
+              onClick={zakljuciSkiro}
+            >
+              Zakljuci Najem
+            </Button>
+          </div>
+        )}
       </div>
       <Toast
         open={openToast}
