@@ -172,7 +172,14 @@ const MojiOglasi = () => {
         ))} */}
         {vsiOglasi.length === 0 && <Typography>Ni oglasov</Typography>}
         {vsiOglasi.map((data) => (
-          <Grid item xs={2} sm={4} md={4} key={data.id_skiro}>
+          <Grid
+            item
+            xs={2}
+            sm={4}
+            md={4}
+            key={data.id_skiro}
+            sx={{ height: "60%", minHeight: 500, minWidth: 300 }}
+          >
             <Oglas
               id={data.id_skiro}
               title={data.naziv}

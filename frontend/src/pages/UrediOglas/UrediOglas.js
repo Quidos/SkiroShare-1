@@ -126,8 +126,7 @@ const UrediOglas = () => {
             required
             id="filled-basic"
             label="Naziv skiroja"
-            variant="filled"
-            sx={{ marginTop: 1 }}
+            sx={{ marginTop: 1, backgroundColor: "white" }}
             value={naziv}
             onChange={(e) => {
               setNaziv(e.target.value);
@@ -136,10 +135,9 @@ const UrediOglas = () => {
             helperText={praznaPoljaError.includes(0) && "Prosimo vnesite polje"}
           />
           <FormControl
-            variant="filled"
             fullWidth
             required
-            sx={{ marginTop: 1 }}
+            sx={{ marginTop: 1, backgroundColor: "white" }}
             error={praznaPoljaError.includes(1)}
             // helperText={praznaPoljaError.includes(1) && "Prosimo vnesite polje"}
           >
@@ -167,9 +165,8 @@ const UrediOglas = () => {
             required
             id="filled-basic"
             label="Opis skiroja"
-            variant="filled"
             multiline
-            sx={{ marginTop: 1 }}
+            sx={{ marginTop: 1, backgroundColor: "white" }}
             value={opis}
             onChange={(e) => {
               setOpis(e.target.value);
@@ -180,11 +177,10 @@ const UrediOglas = () => {
           <TextField
             required
             id="filled-basic"
-            label="Cena €"
-            variant="filled"
+            label="Cena na minuto €"
             type="number"
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-            sx={{ marginTop: 1 }}
+            sx={{ marginTop: 1, backgroundColor: "white" }}
             value={cena}
             onChange={(e) => {
               setCena(e.target.value);
@@ -196,7 +192,6 @@ const UrediOglas = () => {
             required
             id="filled-basic"
             label="Baterija %"
-            variant="filled"
             type="number"
             inputProps={{
               inputMode: "numeric",
@@ -204,7 +199,7 @@ const UrediOglas = () => {
               min: 0,
               max: 100,
             }}
-            sx={{ marginTop: 1 }}
+            sx={{ marginTop: 1, backgroundColor: "white" }}
             value={baterija}
             onChange={(e) => {
               try {

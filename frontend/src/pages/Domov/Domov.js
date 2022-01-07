@@ -53,7 +53,10 @@ const Domov = () => {
       filteredOglasi.sort(
         (a, b) => parseFloat(a.razdalja) - parseFloat(b.razdalja)
       );
-      if (run) setVsiOglasi(filteredOglasi);
+      if (run) {
+        setVsiOglasi(filteredOglasi);
+        setLoading(false);
+      }
     } else {
       if (prvotniOglasi.length === 0) {
         (async function () {
@@ -62,11 +65,13 @@ const Domov = () => {
           if (run) {
             setVsiPrvotniOglasi(newData);
             setVsiOglasi(newData);
+            setLoading(false);
           }
         })();
+      } else if (run) {
+        setVsiOglasi(prvotniOglasi);
+        setLoading(false);
       }
-      if (run) setVsiOglasi(prvotniOglasi);
-      setLoading(false);
     }
 
     return () => {
@@ -97,12 +102,21 @@ const Domov = () => {
         container
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
+        sx={{ height: "100%" }}
         // direction="row"
         // justifyContent="center"
         // alignItems="center"
+        // alignItems="stretch"
       >
         {vsiOglasi.map((data) => (
-          <Grid item xs={2} sm={4} md={4} key={data.id_skiro}>
+          <Grid
+            item
+            xs={2}
+            sm={4}
+            md={4}
+            key={data.id_skiro}
+            sx={{ height: "60%", minHeight: 500, minWidth: 300 }}
+          >
             <Oglas
               id={data.id_skiro}
               title={data.naziv}

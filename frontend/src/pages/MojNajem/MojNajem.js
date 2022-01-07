@@ -149,6 +149,7 @@ const MojNajem = () => {
           hideFooter={true}
           autoHeight={true}
           getRowId={(row) => row.id_najem}
+          sx={{ backgroundColor: "white" }}
         />
       </div>
       <Toast

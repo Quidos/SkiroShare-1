@@ -53,14 +53,22 @@ const Oglas = ({
   }, []);
 
   return (
-    <>
-      {/* <Avatar src={member.name.substring(0, 1).toUpperCase()} /> */}
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        alignItems: "space-between",
+      }}
+    >
       <Card
         sx={{
           maxWidth: 345,
           ":hover": {
             boxShadow: 20, // theme.shadows[20]
           },
+          display: "flex",
+          flexDirection: "column",
+          maxHeight: "100%",
         }}
       >
         <CardMedia
@@ -68,10 +76,17 @@ const Oglas = ({
           image={!hasImage ? Skiro : null}
           src={hasImage ? imageURL : null}
           alt="Skiro"
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: "100%", height: "70%" }}
         />
 
-        <CardContent>
+        <CardContent
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            height: "100%",
+          }}
+        >
           <Typography gutterBottom variant="h5" component="div">
             <Badge
               badgeContent={razdalja}
@@ -101,7 +116,7 @@ const Oglas = ({
         razdalja={razdalja}
         oglasUporabnika={oglasUporabnika}
       />
-    </>
+    </div>
   );
 };
 

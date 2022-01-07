@@ -1,5 +1,6 @@
 .objaviOglas {
-  width: 100%;
+  width: 50% !important;
+  height: 100% !important;
 }
 .objaviOglasPrvi {
   display: flex;

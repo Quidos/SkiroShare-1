@@ -110,7 +110,7 @@ const Nastavitve = () => {
   }, []);
   return (
     <div className="drawerContent">
-      <div>
+      <div className="nastavitveWrapper">
         {errorRaised.length > 0 && (
           <>
             <Typography color={"error"} sx={{ marginTop: 2 }}>
@@ -122,36 +122,33 @@ const Nastavitve = () => {
           label="Email"
           placeholder="Vnesite Email"
           fullWidth
-          required
-          sx={{ marginTop: 2 }}
           value={email}
           onChange={onChangeEmail}
           error={praznaPoljaError.includes(0)}
           helperText={praznaPoljaError.includes(0) && "Prosimo vnesite polje"}
+          sx={{ backgroundColor: "white", marginTop: 2 }}
         />
         <TextField
           label="Telefonska Stevilka"
           placeholder="Vnesite Telefonsko Številko"
           fullWidth
-          required
-          sx={{ marginTop: 2 }}
           value={number}
           onChange={onChangeNumber}
           error={praznaPoljaError.includes(1)}
           helperText={praznaPoljaError.includes(1) && "Prosimo vnesite polje"}
           type="number"
           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+          sx={{ backgroundColor: "white", marginTop: 2, marginTop: 2 }}
         />
         <TextField
           label="Uporabniško ime"
           placeholder="Vnesite uporabniško ime"
           fullWidth
-          required
-          sx={{ marginTop: 2 }}
           value={username}
           onChange={onChangeUsername}
           error={praznaPoljaError.includes(2)}
           helperText={praznaPoljaError.includes(2) && "Prosimo vnesite polje"}
+          sx={{ backgroundColor: "white", marginTop: 2 }}
         />
         <Button
           type="submit"
@@ -163,27 +160,25 @@ const Nastavitve = () => {
           Novo Geslo
         </Button>
         {newPassword && (
-          <>
+          <div>
             <TextField
               label="Geslo"
               placeholder="Vnesite geslo"
               type="password"
               fullWidth
-              required
-              sx={{ marginTop: 2 }}
               value={password}
               onChange={onChangePassword}
               error={praznaPoljaError.includes(3)}
               helperText={
                 praznaPoljaError.includes(3) && "Prosimo vnesite polje"
               }
+              sx={{ backgroundColor: "white", marginTop: 2 }}
             />
             <TextField
               label="Ponovno geslo"
               placeholder="Vnesite geslo ponovno"
               type="password"
               fullWidth
-              required
               value={secondPassword}
               sx={{ marginTop: 2, marginBottom: 2 }}
               onChange={onChangeSecondPassword}
@@ -191,8 +186,9 @@ const Nastavitve = () => {
               helperText={
                 praznaPoljaError.includes(4) && "Prosimo vnesite polje"
               }
+              sx={{ backgroundColor: "white", marginTop: 2, marginBottom: 2 }}
             />
-          </>
+          </div>
         )}
 
         <Button
