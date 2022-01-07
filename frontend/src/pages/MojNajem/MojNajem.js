@@ -41,6 +41,7 @@ const MojNajem = () => {
       baterija
     );
     setOpenToast(true);
+    setIzbranoSkiro(false);
   };
 
   useEffect(() => {
@@ -154,6 +155,7 @@ const MojNajem = () => {
             <GridActionsCellItem
               icon={<CheckCircleIcon sx={{ color: "green" }} />}
               label="ZakljuciNajem"
+              disabled={true}
             />,
           ];
         }
@@ -161,12 +163,7 @@ const MojNajem = () => {
           <GridActionsCellItem
             icon={<PauseCircleFilledIcon sx={{ color: "red" }} />}
             label="ZakljuciNajem"
-            onClick={async (e) => {
-              if (!params.row.konec_najema) {
-                // await zakljuciNajem(params.row.id_skiro, params.row.id_najem);
-                // setOpenToast(true);
-              }
-            }}
+            disabled={true}
           />,
         ];
       },
